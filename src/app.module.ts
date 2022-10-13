@@ -1,11 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsController } from './cats/cats.controller';
 import { CatsModule } from './cats/cats.module';
 import { HttpExceptionFilter } from './exception/http-exception.filters';
 import { LoggerMiddleware } from './middleware/logger';
+import { ValidationPipe } from './pipe/validation.pipe';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
@@ -15,14 +16,20 @@ import { LoggerMiddleware } from './middleware/logger';
   controllers: [AppController],
   //Service는 공급자 이므로 파일을 생성한 경우 꼭 providers 안에 넣어줘야 종속성 문제가 발생하지 않는다.
   providers: [
-    // 종속성 주입을 위한 전역 범위 필터 등록
+    /* 종속성 주입을 위한 전역 범위 필터 등록
     {
       provide: APP_FILTER, 
       useClass: HttpExceptionFilter
     },
+    */
+   /* 종속성 주입을 위한 전역 범위 파이프 등록
+   {
+    provide: APP_PIPE,
+    useClass: ValidationPipe,
+   },
+   */
     AppService],
 })
-
 // @Module에는 미들웨어가 들어가지 못한다. 대신 configure() 메서드를 사용하여 설정
 // 미들웨어를 포함하는 모듈은 NestModule 인터페이스를 구현해야한다.
 export class AppModule implements NestModule{

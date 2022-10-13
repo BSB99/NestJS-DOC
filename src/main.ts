@@ -30,6 +30,13 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
   */
+
+  /*
+  전역 범위 파이프
+  전역필터에 종속성을 주입하려면 모듈에서 직접 전역 범위 파이프를 등록해야 한다.
+
+  app.useGlobalPipes(new ValidationPipe());
+  */
   await app.listen(3000);
 }
 bootstrap();

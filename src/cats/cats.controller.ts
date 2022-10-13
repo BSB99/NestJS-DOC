@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Param, Post, Query, Redirect, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Query, Redirect, UseFilters, UsePipes } from '@nestjs/common';
 import { Cat } from './interface/cat.interface';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { ForbiddenException } from 'src/exception/forbidden';
 import { HttpExceptionFilter } from 'src/exception/http-exception.filters';
+import { JoiValidationPipe } from 'src/pipe/joi.validation.pipe';
+import { ValidationPipe } from 'src/pipe/validation.pipe';
 
 @Controller('cats')
 //컨트롤러 단위로 예외 바인딩 필터 가능
@@ -63,8 +65,22 @@ export class CatsController {
     }
 
     @Get(':id')
-    findOne(@Param() params): string {
-        return `This action returns a #${params.id} cat`
+    async findOne(@Param('id', ParseIntPipe) id: number) {
+        return this.catsService.findOne(id);
+    }
+
+    /*
+    이와 같이 Pipe에 걸렸을 때 에러 문구도 표출해줄 수 있다.
+    @Get(':id')
+    async findOne(@Param('id',new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number) {
+        return this.catsService.findOne(id);
+    }
+    */
+
+    // query로 넘어온 값 또한 Pipe를 통해 걸러줄 수 있다.
+    @Get('query')
+    async findQueryOne(@Query('id', ParseIntPipe) id: number) {
+    return this.catsService.findOne(id);
     }
 
     @Post('header')
@@ -74,8 +90,19 @@ export class CatsController {
         return 'success';
     }
 
+    /*
+    
+    해당 스키마가 맞는지 Joi를 이용한 파이프로 검증
+
     @Post()
+    @UsePipes(new JoiValidationPipe(createCatSchema))
     async create(@Body() createCatDto: CreateCatDto) {
+        this.catsService.create(createCatDto);
+    }
+    */
+
+    @Post()
+    async create(@Body(new ValidationPipe) createCatDto: CreateCatDto) {
         this.catsService.create(createCatDto);
     }
 }
