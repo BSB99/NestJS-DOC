@@ -1,16 +1,34 @@
-import { Body, Controller, Get, Header, HttpCode, Param, Post, Query, Redirect } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Param, Post, Query, Redirect, UseFilters } from '@nestjs/common';
 import { Cat } from './interface/cat.interface';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
+import { ForbiddenException } from 'src/exception/forbidden';
+import { HttpExceptionFilter } from 'src/exception/http-exception.filters';
 
 @Controller('cats')
+//컨트롤러 단위로 예외 바인딩 필터 가능
+//@UseFilters(new HttpExceptionFilter)
 export class CatsController {
     // constructor를 통해 CatsService 주입
     constructor(private catsService: CatsService) {}
     
     // API 경로 : GET /cats
     @Get()
+    // 지역 바인딩 필터
+    //@UseFilters(new HttpExceptionFilter())
     async findAll(): Promise<Cat[]> {
+        /*
+        표준 예외 필터
+
+        throw new HttpException({
+            status: HttpStatus.FORBIDDEN,
+            error: 'This is a custom message',
+        }, HttpStatus.FORBIDDEN);
+        
+        */
+
+       // 사용자 정의 예외 필터를 적용 한 예시
+       throw new ForbiddenException();
         return this.catsService.findAll();
     }
 

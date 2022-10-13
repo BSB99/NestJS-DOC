@@ -1,8 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsController } from './cats/cats.controller';
 import { CatsModule } from './cats/cats.module';
+import { HttpExceptionFilter } from './exception/http-exception.filters';
 import { LoggerMiddleware } from './middleware/logger';
 
 @Module({
@@ -12,7 +14,13 @@ import { LoggerMiddleware } from './middleware/logger';
   imports: [CatsModule],
   controllers: [AppController],
   //Service는 공급자 이므로 파일을 생성한 경우 꼭 providers 안에 넣어줘야 종속성 문제가 발생하지 않는다.
-  providers: [AppService],
+  providers: [
+    // 종속성 주입을 위한 전역 범위 필터 등록
+    {
+      provide: APP_FILTER, 
+      useClass: HttpExceptionFilter
+    },
+    AppService],
 })
 
 // @Module에는 미들웨어가 들어가지 못한다. 대신 configure() 메서드를 사용하여 설정
