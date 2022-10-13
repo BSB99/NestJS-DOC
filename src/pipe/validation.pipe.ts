@@ -8,17 +8,16 @@ export class ValidationPipe implements PipeTransform<any> {
   async transform(value: any, { metatype }: ArgumentMetadata) {
     //현재 인수가 JS 유형인 경우 검증 필요 X
     if (!metatype || !this.toValidate(metatype)) {
-      return value;
+        return value;
     }
     // Body로 넘어온 값 확인
     const object = plainToInstance(metatype, value);
     const errors = await validate(object);
-    console.log(errors)
     if (errors.length > 0) {
-      throw new BadRequestException('Validation failed');
+        throw new BadRequestException('Validation failed');
     }
     return value;
-  }
+    }
 
   private toValidate(metatype: Function): boolean {
     const types: Function[] = [String, Boolean, Number, Array, Object];

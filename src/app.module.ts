@@ -28,6 +28,12 @@ import { ValidationPipe } from './pipe/validation.pipe';
     useClass: ValidationPipe,
    },
    */
+  /* 종속성 주입을 위한 전역 범위 가드 등록
+   {
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+   },
+   */
     AppService],
 })
 // @Module에는 미들웨어가 들어가지 못한다. 대신 configure() 메서드를 사용하여 설정

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Query, Redirect, UseFilters, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Query, Redirect, SetMetadata, UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import { Cat } from './interface/cat.interface';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -6,6 +6,8 @@ import { ForbiddenException } from 'src/exception/forbidden';
 import { HttpExceptionFilter } from 'src/exception/http-exception.filters';
 import { JoiValidationPipe } from 'src/pipe/joi.validation.pipe';
 import { ValidationPipe } from 'src/pipe/validation.pipe';
+import { RolesGuard } from 'src/guard/Roles.guard';
+import { Roles } from 'src/decorators/Roles';
 
 @Controller('cats')
 //컨트롤러 단위로 예외 바인딩 필터 가능
@@ -19,6 +21,12 @@ export class CatsController {
     // 지역 바인딩 필터
     //@UseFilters(new HttpExceptionFilter())
     async findAll(): Promise<Cat[]> {
+        try {
+            return this.catsService.findAll();
+        } catch(err){
+            // 사용자 정의 예외 필터를 적용 한 예시
+            throw new ForbiddenException();
+        }
         /*
         표준 예외 필터
 
@@ -28,10 +36,6 @@ export class CatsController {
         }, HttpStatus.FORBIDDEN);
         
         */
-
-       // 사용자 정의 예외 필터를 적용 한 예시
-       throw new ForbiddenException();
-        return this.catsService.findAll();
     }
 
     // GET 요청 시 경로는 abcd, ab_cd, ab(어떠한 숫자나 문자, ?를 제외한 기호)cd 이다.
@@ -102,6 +106,7 @@ export class CatsController {
     */
 
     @Post()
+    @Roles('admin')
     async create(@Body(new ValidationPipe) createCatDto: CreateCatDto) {
         this.catsService.create(createCatDto);
     }
