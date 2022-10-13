@@ -1,12 +1,17 @@
 import { Body, Controller, Get, Header, HttpCode, Param, Post, Query, Redirect } from '@nestjs/common';
+import { Cat } from './interface/cat.interface';
+import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 
 @Controller('cats')
 export class CatsController {
+    // constructor를 통해 CatsService 주입
+    constructor(private catsService: CatsService) {}
+    
     // API 경로 : GET /cats
     @Get()
-    findAll(): string {
-        return 'This action returns all cats';
+    async findAll(): Promise<Cat[]> {
+        return this.catsService.findAll();
     }
 
     // GET 요청 시 경로는 abcd, ab_cd, ab(어떠한 숫자나 문자, ?를 제외한 기호)cd 이다.
@@ -52,7 +57,7 @@ export class CatsController {
     }
 
     @Post()
-    create(@Body() createCatDto: CreateCatDto): string {
-        return 'This action adds a cat';
+    async create(@Body() createCatDto: CreateCatDto) {
+        this.catsService.create(createCatDto);
     }
 }
