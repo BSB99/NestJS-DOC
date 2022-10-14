@@ -12,6 +12,7 @@ import { LoggingInterceptor } from 'src/interceptor/logging';
 import { TransformInterceptor } from 'src/interceptor/transform';
 import { ExcludeNullInterceptor } from 'src/interceptor/excludeNull';
 import { TimeoutInterceptor } from 'src/interceptor/timeout';
+import { Cats } from 'src/decorator.ts/cat';
 
 @Controller('cats')
 /*
@@ -29,8 +30,10 @@ export class CatsController {
     @Get()
     // 지역 바인딩 필터
     //@UseFilters(new HttpExceptionFilter())
-    async findAll(): Promise<Cat[]> {
+    
+    async findAll(@Cats('name') name: string): Promise<Cat[]> {
         try {
+            console.log(name);
             return this.catsService.findAll();
         } catch(err){
             // 사용자 정의 예외 필터를 적용 한 예시
