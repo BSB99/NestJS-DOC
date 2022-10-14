@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Query, Redirect, SetMetadata, UseFilters, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Query, Redirect, SetMetadata, UseFilters, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
 import { Cat } from './interface/cat.interface';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -8,10 +8,19 @@ import { JoiValidationPipe } from 'src/pipe/joi.validation.pipe';
 import { ValidationPipe } from 'src/pipe/validation.pipe';
 import { RolesGuard } from 'src/guard/Roles.guard';
 import { Roles } from 'src/decorators/Roles';
+import { LoggingInterceptor } from 'src/interceptor/logging';
+import { TransformInterceptor } from 'src/interceptor/transform';
+import { ExcludeNullInterceptor } from 'src/interceptor/excludeNull';
+import { TimeoutInterceptor } from 'src/interceptor/timeout';
 
 @Controller('cats')
-//컨트롤러 단위로 예외 바인딩 필터 가능
-//@UseFilters(new HttpExceptionFilter)
+/*
+컨트롤러 단위로 예외 바인딩 필터 가능
+@UseFilters(new HttpExceptionFilter)
+*/
+// 바인딩 인터셉터 적용
+@UseInterceptors(LoggingInterceptor)
+@UseInterceptors(TransformInterceptor, TimeoutInterceptor)
 export class CatsController {
     // constructor를 통해 CatsService 주입
     constructor(private catsService: CatsService) {}

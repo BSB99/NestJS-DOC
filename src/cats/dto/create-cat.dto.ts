@@ -1,4 +1,4 @@
-import { IsInt, IsString } from "class-validator";
+import { IsInt, IsOptional, IsString } from "class-validator";
 
 // @Body 데코레이터를 사용하기 전에 DTO 스키마 생성
 export class CreateCatDto {
@@ -9,5 +9,6 @@ export class CreateCatDto {
     age: number;
     
     @IsString()
+    @IsOptional()
     breed: string;
   }
