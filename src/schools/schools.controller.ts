@@ -1,20 +1,20 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AnimalsService } from './animals.service';
-import { CreateAnimalDto } from './dto/create-animal.dto';
-import { UpdateAnimalDto } from './dto/update-animal.dto';
-import { Animals } from './entity/animal.entity';
+import { SchoolsService } from './schools.service';
+import { CreateSchoolDto } from './dto/create-school.dto';
+import { UpdateSchoolDto } from './dto/update-school.dto';
+import { School } from './entity/Schools.entity';
 
-@ApiTags('animals')
-@Controller('animals')
-export class AnimalsController {
-    constructor(private animalsService: AnimalsService) {}
+@ApiTags('Schools')
+@Controller('Schools')
+export class SchoolsController {
+    constructor(private schoolsService: SchoolsService) {}
 
     @ApiOperation({ summary: '동물 전체 조회 API', description: '동물 전체 조회'})
     @Get()
-    async allAnimals(): Promise<object> {
+    async allSchools(): Promise<object> {
         try {
-            const response: Animals[] = await this.animalsService.allAnimals();
+            const response: School[] = await this.schoolsService.allSchools();
 
             return {
                 success: true,
@@ -27,9 +27,9 @@ export class AnimalsController {
 
     @ApiOperation({ summary: '동물 정보 생성 API', description: '동물 정보 생성'})
     @Post()
-    async create(@Body() createAnimalDto: CreateAnimalDto): Promise<object> {
+    async create(@Body() createAnimalDto: CreateSchoolDto): Promise<object> {
         try {
-            const response: Animals = await this.animalsService.create(createAnimalDto);
+            const response: School = await this.schoolsService.create(createAnimalDto);
 
             if (!response) {
                 return {success: false};
@@ -43,9 +43,9 @@ export class AnimalsController {
 
     @ApiOperation({ summary: '동물 정보 수정 API', description: '동물 정보 수정'})
     @Patch(':no')
-    async update(@Param('no') no: number, @Body() updateAnimalDto: UpdateAnimalDto): Promise<object> {
+    async update(@Param('no') no: number, @Body() updateAnimalDto: UpdateSchoolDto): Promise<object> {
         try {
-            const response: number = await this.animalsService.update(no, updateAnimalDto);
+            const response: number = await this.schoolsService.update(no, updateAnimalDto);
 
             if (!response) {
                 return {success: false};
@@ -61,7 +61,7 @@ export class AnimalsController {
     @Delete(':no')
     async delete(@Param('no') no: number): Promise<object> {
         try {
-            const response: number = await this.animalsService.delete(no);
+            const response: number = await this.schoolsService.delete(no);
 
             if (!response) {
                 return {success: false};

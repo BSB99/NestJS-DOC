@@ -8,12 +8,12 @@ import { CatsModule } from './cats/cats.module';
 import { HttpExceptionFilter } from './exception/http-exception.filters';
 import { LoggerMiddleware } from './middleware/logger';
 import { ValidationPipe } from './pipe/validation.pipe';
-import { DogsModule } from './dogs/dogs.module';
-import { AnimalsModule } from './animals/animals.module';
-import { Dogs } from './dogs/entity/dogs.entity';
+import { DogsModule } from './students/students.module';
+import { SchoolsModule } from './schools/schools.module';
+import { Student } from './students/entity/Students.entity';
 import { DataSource } from 'typeorm';
 import { DatabaseModule } from './database/database.module';
-import { DogsController } from './dogs/dogs.controller';
+import { StudentsController } from './students/students.controller';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
@@ -21,7 +21,7 @@ import { DogsController } from './dogs/dogs.controller';
   //.forRoot({isGlobal: true}) -> 전역 모듈로 쓰겠다.
   imports: [
   DogsModule,
-  AnimalsModule,
+  SchoolsModule,
 ],
   controllers: [AppController],
   //Service는 공급자 이므로 파일을 생성한 경우 꼭 providers 안에 넣어줘야 종속성 문제가 발생하지 않는다.
