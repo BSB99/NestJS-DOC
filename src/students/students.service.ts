@@ -1,32 +1,35 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { Student } from './entity/Students.entity';
+import { StudentsRepository } from './repository/students.repository';
 
 @Injectable()
 export class StudentsService {
     constructor(
-        @Inject('STUDENTS_REPOSITORY') 
-        private readonly studentsRepository: Repository<Student>,
+        @InjectRepository(Student, 'testDB_1')
+        private studentsInfo: Repository<Student>,
+
+        private readonly studentRepository: StudentsRepository
       ) {}
     
     async allStudents() {
         try {
-            
-            return await this.studentsRepository.find();
+            return await this.studentRepository.allStudents();
         } catch(err) {
             throw err;
         }
     }
 
-    async create(createStudentDto:CreateStudentDto): Promise<Student> {
+    async create(createStudentDto:CreateStudentDto) {
         try {
             const {name, age, school} = createStudentDto;
-            const dog = await this.studentsRepository.create({name, age, school});
+            const student = await this.studentsInfo.create({name, age, school});
             
-            await this.studentsRepository.save(dog);
-            return dog;
+            await this.studentsInfo.save(student);
+            return student;
         } catch(err) {
             throw err;
         }
@@ -34,16 +37,16 @@ export class StudentsService {
 
     async update(no: number, updateStudentDto: UpdateStudentDto) {
         try {
-            const dog: Student = await this.studentsRepository.findOne({
+            const student: Student = await this.studentsInfo.findOne({
             where: {
             no,
             },
         });
 
-        if (!dog) {
+        if (!student) {
             throw new NotFoundException(`해당 ${no}번 학생의 정보는 존재하지 않습니다.`);
         }
-        const {affected} = await this.studentsRepository.update(no, updateStudentDto);
+        const {affected} = await this.studentsInfo.update(no, updateStudentDto);
 
         return affected;
         } catch(err) {
@@ -53,7 +56,7 @@ export class StudentsService {
 
     async delete(no: number) {
         try {
-        const {affected} = await this.studentsRepository.delete(no);
+        const {affected} = await this.studentsInfo.delete(no);
         
         if (!affected) {
             throw new NotFoundException(`해당하는 ${no}번 학생의 정보는 존재하지 않습니다.`);

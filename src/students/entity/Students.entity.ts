@@ -21,10 +21,4 @@ export class Student extends BaseEntity {
         type: 'int'
     })
     school: number;
-    // @ManyToOne(() => School, (school) => school.no, {
-    //     onDelete: 'SET NULL',
-    //     nullable: true
-    // })
-    // @JoinColumn({name: 'school_no'})
-    // school: Promise<School>;
 }

@@ -10,7 +10,7 @@ import { School } from './entity/Schools.entity';
 export class SchoolsController {
     constructor(private schoolsService: SchoolsService) {}
 
-    @ApiOperation({ summary: '동물 전체 조회 API', description: '동물 전체 조회'})
+    @ApiOperation({ summary: '학교 전체 조회 API', description: '학교 전체 조회'})
     @Get()
     async allSchools(): Promise<object> {
         try {
@@ -25,7 +25,7 @@ export class SchoolsController {
         }
     }
 
-    @ApiOperation({ summary: '동물 정보 생성 API', description: '동물 정보 생성'})
+    @ApiOperation({ summary: '학교 정보 생성 API', description: '학교 정보 생성'})
     @Post()
     async create(@Body() createAnimalDto: CreateSchoolDto): Promise<object> {
         try {
@@ -41,7 +41,7 @@ export class SchoolsController {
         }
     }
 
-    @ApiOperation({ summary: '동물 정보 수정 API', description: '동물 정보 수정'})
+    @ApiOperation({ summary: '학교 정보 수정 API', description: '학교 정보 수정'})
     @Patch(':no')
     async update(@Param('no') no: number, @Body() updateAnimalDto: UpdateSchoolDto): Promise<object> {
         try {
@@ -57,7 +57,7 @@ export class SchoolsController {
         }
     }
 
-    @ApiOperation({ summary: '동물 정보 삭제 API', description: '동물 정보 삭제'})
+    @ApiOperation({ summary: '학교 정보 삭제 API', description: '학교 정보 삭제'})
     @Delete(':no')
     async delete(@Param('no') no: number): Promise<object> {
         try {

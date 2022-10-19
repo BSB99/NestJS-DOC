@@ -1,15 +1,21 @@
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CustomRepository } from "src/decorators/typeorm-ex.decorators";
-import { DataSource, Repository } from "typeorm";
-import { School} from "../entity/Schools.entity";
+import { Repository } from "typeorm";
+import { School } from "../entity/Schools.entity";
 
-export const schoolsRepository = [
-  {
-      provide: 'SCHOOLS_REPOSITORY',
-      useFactory: (dataSource: DataSource) => dataSource.getRepository(School),
-      inject: ['DATA2_SOURCE'],
-  },
-];
+@Injectable()
+export class SchoolsRepository {
+    constructor(
+        @InjectRepository(School, 'testDB_2')
+        private schoolsRepository: Repository<School>,
+    ){}
 
-// @CustomRepository(School)
-// export class SchoolRepository extends Repository<School> {}
+    async allSchools() {
+        try{ 
+            return await this.schoolsRepository.query(`SELECT students.no, students.name, students.age, schools.name as school FROM test_1.students as students LEFT JOIN test_2.schools as schools ON students.school = schools.no`);
+        } catch (err) {
+            throw err;
+        }
+        
+    }
+}

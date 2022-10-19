@@ -9,9 +9,17 @@ export class UpdateStudentDto {
     @IsString()
     name: string;
 
+    @ApiProperty({
+      example: 12,
+      description: '나이를 입력 해 주세요'
+    })
     @IsNumber()
     age: number;
 
+    @ApiProperty({
+      example: 1,
+      description: '학교 번호를 입력 해 주세요'
+    })
     @IsNumber()
     school: number;
   }

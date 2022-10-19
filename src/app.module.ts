@@ -8,19 +8,44 @@ import { CatsModule } from './cats/cats.module';
 import { HttpExceptionFilter } from './exception/http-exception.filters';
 import { LoggerMiddleware } from './middleware/logger';
 import { ValidationPipe } from './pipe/validation.pipe';
-import { DogsModule } from './students/students.module';
+import { StudentsModule } from './students/students.module';
 import { SchoolsModule } from './schools/schools.module';
 import { Student } from './students/entity/Students.entity';
 import { DataSource } from 'typeorm';
-import { DatabaseModule } from './database/database.module';
 import { StudentsController } from './students/students.controller';
+import { School } from './schools/entity/Schools.entity';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
   //CatsModule.forRoot([User]) -> CatsModule을 User에서 참조하겠다.
   //.forRoot({isGlobal: true}) -> 전역 모듈로 쓰겠다.
   imports: [
-  DogsModule,
+    TypeOrmModule.forRoot({
+      name: "testDB_2",  
+      type: "mysql",
+      host : "127.0.0.1",
+      port : 3306,
+      username : "root",
+      password : "root",
+      database : "test_2",
+      entities: [School],
+      synchronize: true,
+      //autoLoadEntities: true일 경우 entity가 자동 로드
+      autoLoadEntities: true
+  }),
+  TypeOrmModule.forRoot({
+      name: "testDB_1",  
+      type: "mysql",
+      host : "127.0.0.1",
+      port : 3306,
+      username : "root",
+      password : "root",
+      database : "test_1",
+      entities: [Student],
+      synchronize: true,
+      autoLoadEntities: true
+  }),
+  StudentsModule,
   SchoolsModule,
 ],
   controllers: [AppController],

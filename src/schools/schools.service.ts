@@ -4,22 +4,18 @@ import { Repository } from 'typeorm';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 import { School } from './entity/Schools.entity';
-// import { SchoolRepository } from './repository/schools.repository';
+
 
 @Injectable()
 export class SchoolsService {
     constructor(
-        @Inject('SCHOOLS_REPOSITORY') 
-        private readonly schoolsRepository: Repository<School>,
-
-        // @InjectRepository(School)
-        // private readonly testRepository: SchoolRepository
+      @InjectRepository(School, 'testDB_2')
+      private schoolsRepository: Repository<School>
       ) {}
 
       async allSchools(): Promise<School[]> {
         try{
-            const Schools: School[] = await this.schoolsRepository.find();
-
+            const Schools: School[] = await this.schoolsRepository.find()
             return Schools;
         }catch(err){
             throw err;
@@ -51,7 +47,7 @@ export class SchoolsService {
           });
       
           if (!animal) {
-            throw new NotFoundException(`해당 ${no}번 동물의 정보는 존재하지 않습니다.`);
+            throw new NotFoundException(`해당 ${no}번 학교의 정보는 존재하지 않습니다.`);
           }
           const {affected} = await this.schoolsRepository.update(no, updateAnimalDto);
 
@@ -65,7 +61,7 @@ export class SchoolsService {
         try {
           const {affected} = await this.schoolsRepository.delete(no);
           if (!affected) {
-            throw new NotFoundException(`해당하는 ${no}번 동물의 정보는 존재하지 않습니다.`);
+            throw new NotFoundException(`해당 ${no}번 학교의 정보는 존재하지 않습니다.`);
           };
 
           return affected;

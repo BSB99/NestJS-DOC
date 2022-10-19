@@ -1,16 +1,12 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from 'src/database/database.module';
 import { SchoolsController } from './schools.controller';
 import { SchoolsService } from './schools.service';
-import { /*SchoolRepository,*/ schoolsRepository } from './repository/schools.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { School } from './entity/Schools.entity';
-import { TypeOrmExModule } from 'src/module/typeorm-ex.module';
-import { CustomRepository } from 'src/decorators/typeorm-ex.decorators';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forFeature([School], 'testDB_2')],
   controllers: [SchoolsController],
-  providers: [...schoolsRepository,SchoolsService]
+  providers: [SchoolsService]
 })
 export class SchoolsModule {}
