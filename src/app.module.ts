@@ -31,7 +31,7 @@ import { School } from './schools/entity/Schools.entity';
       entities: [School],
       synchronize: true,
       //autoLoadEntities: true일 경우 entity가 자동 로드
-      autoLoadEntities: true
+      // autoLoadEntities: true
   }),
   TypeOrmModule.forRoot({
       name: "testDB_1",  
@@ -43,7 +43,7 @@ import { School } from './schools/entity/Schools.entity';
       database : "test_1",
       entities: [Student],
       synchronize: true,
-      autoLoadEntities: true
+      // autoLoadEntities: true
   }),
   StudentsModule,
   SchoolsModule,

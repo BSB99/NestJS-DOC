@@ -21,4 +21,22 @@ export class Student extends BaseEntity {
         type: 'int'
     })
     school: number;
+
+    @Column({
+        type: 'varchar',
+        length: 255,
+    })
+    email: string;
+
+    @Column({
+        type: 'varchar',
+        length: 255,
+    })
+    password: string;
+
+    @Column({
+        type: 'varchar',
+        length: 255
+    })
+    summary: string;
 }

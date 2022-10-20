@@ -30,6 +30,10 @@ export class StudentsController {
         try {
             const response = await this.studentsService.create(createStudentDto);
 
+            if (!response) {
+                return {success: false};
+            }
+
             return {success : true};
         } catch(err) {
             throw err;
@@ -42,9 +46,9 @@ export class StudentsController {
         try {
         const response = await this.studentsService.update(no, updateStudentDto);
 
-        // if (!response) {
-        //     return {success: false};
-        // }
+        if (!response) {
+            return {success: false};
+        }
 
         return {success: true};
     } catch (err) {

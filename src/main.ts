@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -13,6 +14,18 @@ async function bootstrap() {
   const config = new BaseApiDocument().initializeOptions();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  //DTO를 쓰기위한 global pipe 지정
+  app.useGlobalPipes(
+    new ValidationPipe({
+      // 엔티티 데코에 없는 프로퍼티 값 거름
+      whitelist: true,
+      // 엔티티 데코에 없는 값 기입 시 그 값에 대한 에러메시지 표출
+      forbidNonWhitelisted: true,
+      // 컨트롤러가 값을 받을 때, 컨트롤러에 정의한 타입으로 형변환
+      transform: true,
+    }),
+  );
   /* 
   글로벌 미들웨어
   app.use(LoggerMiddleware)

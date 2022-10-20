@@ -25,8 +25,8 @@ export class StudentsService {
 
     async create(createStudentDto:CreateStudentDto) {
         try {
-            const {name, age, school} = createStudentDto;
-            const student = await this.studentsInfo.create({name, age, school});
+            const {name, age, school, email, password, summary} = createStudentDto;
+            const student = this.studentsInfo.create({name, age, school, email, password, summary});
             
             await this.studentsInfo.save(student);
             return student;

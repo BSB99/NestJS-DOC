@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsString } from "class-validator";
+import { Contains, IsInt, IsNotEmpty, IsString } from "class-validator";
 
 export class UpdateSchoolDto {
     @ApiProperty({
@@ -7,5 +7,10 @@ export class UpdateSchoolDto {
       description: '학교를 입력 해 주세요'
     })  
     @IsString()
+    @IsNotEmpty()
+    // 해당 문자가 있는지 확인
+    @Contains('학교', {
+      message: `'학교' 단어를 넣어주세요!`
+    })
     name: string;
   }
