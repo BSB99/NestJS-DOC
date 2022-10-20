@@ -5,8 +5,8 @@ import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 import { School } from './entity/Schools.entity';
 
-@ApiTags('Schools')
-@Controller('Schools')
+@ApiTags('schools')
+@Controller('schools')
 export class SchoolsController {
     constructor(private schoolsService: SchoolsService) {}
 
@@ -26,7 +26,7 @@ export class SchoolsController {
     }
 
     @ApiOperation({ summary: '학교 정보 생성 API', description: '학교 정보 생성'})
-    @Post()
+    @Post('create')
     async create(@Body() createAnimalDto: CreateSchoolDto): Promise<object> {
         try {
             const response: School = await this.schoolsService.create(createAnimalDto);

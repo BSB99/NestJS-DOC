@@ -25,7 +25,7 @@ export class StudentsController {
     }
 
     @ApiOperation({ summary: '학생 정보 생성 API', description: '학생 정보 생성'})
-    @Post()
+    @Post('create')
     async create(@Body() createStudentDto: CreateStudentDto):Promise<object> {
         try {
             const response = await this.studentsService.create(createStudentDto);
