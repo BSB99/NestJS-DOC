@@ -15,10 +15,7 @@ export class StudentsController {
         try {
             const response = await this.studentsService.allStudents();
 
-            return {
-                success: true,
-                response
-            };
+            return response;
         } catch(err) {
             throw err;
         }
@@ -34,7 +31,7 @@ export class StudentsController {
                 return {success: false};
             }
 
-            return {success : true};
+            return {msg: '학생 정보가 등록 되었습니다.'};
         } catch(err) {
             throw err;
         }
@@ -50,7 +47,7 @@ export class StudentsController {
             return {success: false};
         }
 
-        return {success: true};
+        return {msg: '학생 정보가 수정 되었습니다.'};
     } catch (err) {
         throw err;
     }
@@ -66,7 +63,7 @@ export class StudentsController {
                 return {success: false};
             }
     
-            return {success: true};
+            return {msg: '학생 정보가 삭제 되었습니다.'};
     } catch (err) {
         throw err;
     }

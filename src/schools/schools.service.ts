@@ -47,7 +47,7 @@ export class SchoolsService {
           });
       
           if (!animal) {
-            throw new NotFoundException(`해당 ${no}번 학교의 정보는 존재하지 않습니다.`);
+            throw new NotFoundException('1000');
           }
           const {affected} = await this.schoolsRepository.update(no, updateAnimalDto);
 

@@ -12,6 +12,8 @@ import { catchError } from 'rxjs/operators';
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+      const status = context.switchToHttp().getResponse().status;
+
       return next
         .handle()
         .pipe(

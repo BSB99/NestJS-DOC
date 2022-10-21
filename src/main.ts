@@ -3,7 +3,10 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './exception/all-exceptions.filter';
+import { HttpErrorExceptionFilter } from './exception/error-exception.filters';
 import { HttpExceptionFilter } from './exception/http-exception.filters';
+import { ErrorsInterceptor } from './interceptor/errors';
+import { TransformInterceptor } from './interceptor/transform';
 import { LoggerMiddleware } from './middleware/logger';
 import { BaseApiDocument } from './swagger/swagger.document';
 
@@ -30,6 +33,9 @@ async function bootstrap() {
   글로벌 미들웨어
   app.use(LoggerMiddleware)
   */
+  
+  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalFilters(new HttpErrorExceptionFilter());
 
   /* 
   
