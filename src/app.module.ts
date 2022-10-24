@@ -14,6 +14,8 @@ import { Student } from './students/entity/Students.entity';
 import { DataSource } from 'typeorm';
 import { StudentsController } from './students/students.controller';
 import { School } from './schools/entity/Schools.entity';
+import { UsersModule } from './users/users.module';
+import { User } from './users/entity/users.entity';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
@@ -41,12 +43,13 @@ import { School } from './schools/entity/Schools.entity';
       username : "root",
       password : "root",
       database : "test_1",
-      entities: [Student],
+      entities: [Student, User],
       synchronize: true,
       // autoLoadEntities: true
   }),
   StudentsModule,
   SchoolsModule,
+  UsersModule,
 ],
   controllers: [AppController],
   //Service는 공급자 이므로 파일을 생성한 경우 꼭 providers 안에 넣어줘야 종속성 문제가 발생하지 않는다.
