@@ -25,7 +25,7 @@ export class UsersController {
     @Post()
     async signIn(@Body() signInDto: SignInDto) {
         try {
-            const response = await this.usersService.signIn(signInDto);
+            const response:object = await this.usersService.signIn(signInDto);
 
             return response;
         } catch (err) {
@@ -37,7 +37,7 @@ export class UsersController {
     @Get('decode-uri/:jwtToken')
     async decode(@Param('jwtToken') jwtToken: string) {
         try {
-            const response = await this.usersService.decode(jwtToken);
+            const response: object = await this.usersService.decode(jwtToken);
 
             return response;
         } catch(err) {

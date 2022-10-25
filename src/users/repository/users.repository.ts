@@ -16,6 +16,7 @@ export class UsersRepository{
             .select(['users.email', 'users.password'])
             .where('users.id = :id', {id})
             .getOne();
+            
         } catch(err) {
             throw err;
         }

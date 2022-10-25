@@ -1,4 +1,4 @@
-import { GoneException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, GoneException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from './repository/users.repository';
 import { payload } from './security/payload';
@@ -9,11 +9,14 @@ export class UsersService {
         private jwtService: JwtService,
     ){}
 
-    async signIn(signInDto) {
+    async signIn({id, psword}) {
         try {
-            const {id, psword} = signInDto
-            const {email, password} = await this.usersRepository.signIn(id);
-            
+            const userInfo = await this.usersRepository.signIn(id);
+            if (userInfo === null) {
+                throw new BadRequestException('1000');
+            }
+
+            const {email, password} = userInfo;
             if (psword !== password) {
                 throw new UnauthorizedException('1003')
             }
@@ -26,9 +29,10 @@ export class UsersService {
         }
     }
 
-    async accessToken(email) {
+    async accessToken(email: string) {
         try {
-            const payload:payload = {email};
+            const payload:payload = { email };
+
             return {
                 accessToken: this.jwtService.sign(payload)
             }
@@ -37,7 +41,7 @@ export class UsersService {
         }
     }
 
-    async decode(jwtToken) {
+    async decode(jwtToken: string) {
         try {
             const {email} = await this.jwtService.verify(jwtToken, {secret: 'SECRET_KEY'});
 

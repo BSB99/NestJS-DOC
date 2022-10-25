@@ -23,7 +23,7 @@ export class SchoolsController {
     }
 
     @ApiOperation({ summary: '학교 정보 생성 API', description: '학교 정보 생성'})
-    @Post('create')
+    @Post()
     async create(@Body() createAnimalDto: CreateSchoolDto): Promise<object> {
         try {
             const response: School = await this.schoolsService.create(createAnimalDto);
