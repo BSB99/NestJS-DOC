@@ -10,16 +10,12 @@ export class UsersRepository{
         private usersRepository: Repository<User>,
     ){}
 
-    async signIn(userInfo) {
+    async signIn(id: string) {
         try {
-            const {id, psword} = userInfo;
-
             return await this.usersRepository.createQueryBuilder('users')
-            .select('users.email')
+            .select(['users.email', 'users.password'])
             .where('users.id = :id', {id})
-            .andWhere('users.password = :psword', {psword})
             .getOne();
-
         } catch(err) {
             throw err;
         }

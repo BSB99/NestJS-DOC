@@ -23,6 +23,7 @@ import { User } from './users/entity/users.entity';
   //.forRoot({isGlobal: true}) -> 전역 모듈로 쓰겠다.
   imports: [
     TypeOrmModule.forRoot({
+      timezone: "Asia/Seoul",
       name: "testDB_2",  
       type: "mysql",
       host : "127.0.0.1",
@@ -36,6 +37,7 @@ import { User } from './users/entity/users.entity';
       // autoLoadEntities: true
   }),
   TypeOrmModule.forRoot({
+      timezone: "Asia/Seoul",
       name: "testDB_1",  
       type: "mysql",
       host : "127.0.0.1",
