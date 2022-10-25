@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 import { SignInDto } from './dto/sign-in.dto';
 import { UsersService } from './users.service';
@@ -9,6 +9,7 @@ import { UsersService } from './users.service';
 export class UsersController {
     constructor(private usersService: UsersService){}
 
+    @ApiBearerAuth('access-token')
     @ApiOperation({ summary: 'Bearer Token 인증 API', description: 'Bearer Token 인증'})
     @UseGuards(JwtAuthGuard)
     @Get()

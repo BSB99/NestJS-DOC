@@ -8,6 +8,11 @@ export class BaseApiDocument {
         .setTitle('Swagger')
         .setDescription('Swagger Study')
         .setVersion('1.0.0')
+        //swagger에서 BearerAuth 인증
+        .addBearerAuth(
+        { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
+        'access-token',
+        )
         .addTag('swagger')
         .build();
     }
