@@ -23,4 +23,9 @@ export class User extends BaseEntity{
         length: 255
     })
     password: string
+
+    @Column({
+        nullable: true
+    })
+    refreshToken: string
 }

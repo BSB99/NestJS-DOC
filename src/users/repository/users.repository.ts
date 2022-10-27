@@ -13,11 +13,24 @@ export class UsersRepository{
     async signIn(id: string) {
         try {
             return await this.usersRepository.createQueryBuilder('users')
-            .select(['users.email', 'users.password'])
+            .select(['users.email', 'users.password', 'users.refreshToken'])
             .where('users.id = :id', {id})
             .getOne();
             
         } catch(err) {
+            throw err;
+        }
+    }
+
+    async refreshToken(id: string, refreshToken: string) {
+        try {
+            return await this.usersRepository.createQueryBuilder()
+            .update(User)
+            .set({refreshToken})
+            .where('users.id = id',{id})
+            .execute();
+
+        } catch (err) {
             throw err;
         }
     }

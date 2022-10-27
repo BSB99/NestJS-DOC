@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
+import { RefreshStrategy } from 'src/strategies/auth.jwt-refresh.strategy';
 import { JwtStrategy } from 'src/strategies/auth.jwt.strategy';
 import { User } from './entity/users.entity';
 import { UsersRepository } from './repository/users.repository';
@@ -10,16 +10,8 @@ import { UsersService } from './users.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User], 'testDB_1'), 
-    JwtModule.register({
-    // .env에 보관
-    secret: 'SECRET_KEY',
-    
-    // 토큰 유효 기간
-    signOptions: { expiresIn: '1m'}
-  }) 
-    ],
+    TypeOrmModule.forFeature([User], 'testDB_1')],
     controllers: [UsersController],
-    providers: [UsersService, UsersRepository, JwtStrategy, JwtAuthGuard]
+    providers: [UsersService, UsersRepository, JwtStrategy,  JwtService,  RefreshStrategy]
 })
 export class UsersModule {}

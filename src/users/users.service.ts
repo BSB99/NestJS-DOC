@@ -21,9 +21,12 @@ export class UsersService {
                 throw new UnauthorizedException('1003')
             }
             
-            const accessToken = await this.accessToken(email);
-            
-            return accessToken;
+            const {accessToken} = await this.accessToken(email);
+            const {refreshToken} = await this.refreshToken(email);
+
+            await this.usersRepository.refreshToken(id, refreshToken);
+
+            return {accessToken, refreshToken};
         } catch (err) {
             throw err;
         }
@@ -34,9 +37,21 @@ export class UsersService {
             const payload:payload = { email };
 
             return {
-                accessToken: this.jwtService.sign(payload)
+                accessToken: this.jwtService.sign(payload, {secret:'SECRET_KEY', expiresIn: '1m'})
             }
         } catch(err) {
+            throw err;
+        }
+    }
+
+    async refreshToken(email: string) {
+        try {
+            const payload = {email};
+
+            return {
+                refreshToken: this.jwtService.sign(payload, {secret:'SECRET_REFRESH_KEY', expiresIn: '2m'})
+            }
+        } catch (err) {
             throw err;
         }
     }
@@ -60,5 +75,21 @@ export class UsersService {
                     throw new InternalServerErrorException('1500')
             }
         }   
+    }
+
+    async refreshTokenConfirm(resRefreshToken:string, id: string) {
+        try {
+            const {refreshToken, email} = await this.usersRepository.signIn(id);
+        
+        if (resRefreshToken !== refreshToken) {
+            throw new UnauthorizedException('1030');
+        }
+
+        const accessToken = await this.accessToken(email);
+
+        return {accessToken};
+        } catch (err) {
+            throw err;
+        }
     }
 }

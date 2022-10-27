@@ -13,6 +13,10 @@ export class BaseApiDocument {
         { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
         'access-token',
         )
+        .addBearerAuth(
+        { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
+        'refresh-token',
+        )
         .addTag('swagger')
         .build();
     }
