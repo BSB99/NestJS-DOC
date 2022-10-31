@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RefreshStrategy } from 'src/strategies/auth.jwt-refresh.strategy';
-import { JwtStrategy } from 'src/strategies/auth.jwt.strategy';
+import { AuthService } from 'src/auth/auth.service';
 import { User } from './entity/users.entity';
 import { UsersRepository } from './repository/users.repository';
 import { UsersController } from './users.controller';
@@ -12,6 +11,7 @@ import { UsersService } from './users.service';
   imports: [
     TypeOrmModule.forFeature([User], 'testDB_1')],
     controllers: [UsersController],
-    providers: [UsersService, UsersRepository, JwtStrategy,  JwtService,  RefreshStrategy]
+    providers: [UsersService, UsersRepository, AuthService, JwtService],
+    exports: [UsersService,UsersRepository]
 })
 export class UsersModule {}

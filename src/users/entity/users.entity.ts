@@ -22,10 +22,15 @@ export class User extends BaseEntity{
         type: 'varchar',
         length: 255
     })
-    password: string
+    password: string;
 
     @Column({
         nullable: true
     })
-    refreshToken: string
+    refreshToken: string;
+
+    @Column({
+        default: false
+    })
+    active: boolean;
 }

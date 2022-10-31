@@ -17,6 +17,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   // 함수명은 꼭 validate를 써주어야 한다. 다른 함수명은 오류!
   async validate(payload: any) {
-    return { email: payload.email };
+    try {
+      return { email: payload.email };
+    } catch (err) {
+      throw err;
+    }
   }
 }

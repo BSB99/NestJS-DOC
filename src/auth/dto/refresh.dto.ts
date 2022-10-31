@@ -8,5 +8,5 @@ export class RefreshDto {
     })
     @IsString()
     @IsNotEmpty()
-    id: string
+    id: string;
 }

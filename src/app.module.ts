@@ -1,21 +1,14 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import {  Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CatsController } from './cats/cats.controller';
-import { CatsModule } from './cats/cats.module';
-import { HttpExceptionFilter } from './exception/http-exception.filters';
-import { LoggerMiddleware } from './middleware/logger';
-import { ValidationPipe } from './pipe/validation.pipe';
 import { StudentsModule } from './students/students.module';
 import { SchoolsModule } from './schools/schools.module';
 import { Student } from './students/entity/Students.entity';
-import { DataSource } from 'typeorm';
-import { StudentsController } from './students/students.controller';
 import { School } from './schools/entity/Schools.entity';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entity/users.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
@@ -52,6 +45,7 @@ import { User } from './users/entity/users.entity';
   StudentsModule,
   SchoolsModule,
   UsersModule,
+  AuthModule,
 ],
   controllers: [AppController],
   //Service는 공급자 이므로 파일을 생성한 경우 꼭 providers 안에 넣어줘야 종속성 문제가 발생하지 않는다.
