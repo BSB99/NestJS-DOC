@@ -2,17 +2,16 @@ import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Par
 import { Cat } from './interface/cat.interface';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
-import { ForbiddenException } from 'src/exception/forbidden';
-import { HttpExceptionFilter } from 'src/exception/http-exception.filters';
-import { JoiValidationPipe } from 'src/pipe/joi.validation.pipe';
-import { ValidationPipe } from 'src/pipe/validation.pipe';
-import { RolesGuard } from 'src/guard/Roles.guard';
-import { Roles } from 'src/decorators/Roles';
-import { LoggingInterceptor } from 'src/interceptor/logging';
-import { TransformInterceptor } from 'src/interceptor/transform';
-import { ExcludeNullInterceptor } from 'src/interceptor/excludeNull';
-import { TimeoutInterceptor } from 'src/interceptor/timeout';
-import { Cats } from 'src/decorator.ts/cat';
+import { ForbiddenException } from 'src/common/exception/forbidden';
+import { HttpExceptionFilter } from 'src/common/exception/http-exception.filters';
+import { JoiValidationPipe } from 'src/common/pipe/joi.validation.pipe';
+import { ValidationPipe } from 'src/common/pipe/validation.pipe';
+import { Roles } from 'src/common/decorators/Roles';
+import { LoggingInterceptor } from 'src/common/interceptor/logging';
+import { TransformInterceptor } from 'src/common/interceptor/transform';
+import { ExcludeNullInterceptor } from 'src/common/interceptor/excludeNull';
+import { TimeoutInterceptor } from 'src/common/interceptor/timeout';
+import { Cats } from 'src/common/decorators/cat';
 
 @Controller('cats')
 /*

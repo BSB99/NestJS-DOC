@@ -2,46 +2,22 @@ import {  Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { StudentsModule } from './students/students.module';
-import { SchoolsModule } from './schools/schools.module';
-import { Student } from './students/entity/Students.entity';
-import { School } from './schools/entity/Schools.entity';
-import { UsersModule } from './users/users.module';
-import { User } from './users/entity/users.entity';
-import { AuthModule } from './auth/auth.module';
+import { StudentsModule } from './models/students/students.module';
+import { SchoolsModule } from './models/schools/schools.module';
+import { UsersModule } from './models/users/users.module';
+import { AuthModule } from './models/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { testDB_2 } from './configs/database/testDB_2.config';
+import { testDB_1 } from './configs/database/testDB_1.config';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
   //CatsModule.forRoot([User]) -> CatsModule을 User에서 참조하겠다.
   //.forRoot({isGlobal: true}) -> 전역 모듈로 쓰겠다.
   imports: [
-    TypeOrmModule.forRoot({
-      timezone: "Asia/Seoul",
-      name: "testDB_2",  
-      type: "mysql",
-      host : "127.0.0.1",
-      port : 3306,
-      username : "root",
-      password : "root",
-      database : "test_2",
-      entities: [School],
-      synchronize: true,
-      //autoLoadEntities: true일 경우 entity가 자동 로드
-      // autoLoadEntities: true
-  }),
-  TypeOrmModule.forRoot({
-      timezone: "Asia/Seoul",
-      name: "testDB_1",  
-      type: "mysql",
-      host : "127.0.0.1",
-      port : 3306,
-      username : "root",
-      password : "root",
-      database : "test_1",
-      entities: [Student, User],
-      synchronize: true,
-      // autoLoadEntities: true
-  }),
+  TypeOrmModule.forRoot({...testDB_1}),
+  TypeOrmModule.forRoot({...testDB_2}),
+  ConfigModule.forRoot({ isGlobal: true }),
   StudentsModule,
   SchoolsModule,
   UsersModule,

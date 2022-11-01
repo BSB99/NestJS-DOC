@@ -1,14 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestFactory } from '@nestjs/core';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './exception/all-exceptions.filter';
-import { HttpErrorExceptionFilter } from './exception/error-exception.filters';
-import { HttpExceptionFilter } from './exception/http-exception.filters';
-import { ErrorsInterceptor } from './interceptor/errors';
-import { TransformInterceptor } from './interceptor/transform';
-import { LoggerMiddleware } from './middleware/logger';
-import { BaseApiDocument } from './swagger/swagger.document';
+import { HttpErrorExceptionFilter } from './common/exception/error-exception.filters';
+import { TransformInterceptor } from './common/interceptor/transform';
+import { BaseApiDocument } from './common/swagger/swagger.document';
 
 async function bootstrap() {
   // NestFactory - 인스턴스를 생성할 수 있는 몇 가지 정적 메서드 노출

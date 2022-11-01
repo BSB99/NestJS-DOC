@@ -1,6 +1,6 @@
 import { GoneException, Injectable, InternalServerErrorException, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersRepository } from 'src/users/repository/users.repository';
+import { UsersRepository } from 'src/models/users/repository/users.repository';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,7 @@ export class AuthService {
 
     async refreshToken(email: string) {
         try {
-            const payload = {email};
+            const payload = { email};
 
             return {
                 refreshToken: this.jwtService.sign(payload, {secret:'SECRET_REFRESH_KEY', expiresIn: '10m'})
