@@ -2,7 +2,7 @@ import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Par
 import { Cat } from './interface/cat.interface';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
-import { ForbiddenException } from 'src/common/exception/forbidden';
+import { ForbiddenException } from 'src/common/exception/forbidden.filter';
 import { HttpExceptionFilter } from 'src/common/exception/http-exception.filters';
 import { JoiValidationPipe } from 'src/common/pipe/joi.validation.pipe';
 import { ValidationPipe } from 'src/common/pipe/validation.pipe';
