@@ -12,12 +12,12 @@ export class UsersService {
         try {
             const userInfo = await this.usersRepository.signIn(id);
             if (userInfo === null) {
-                throw new BadRequestException('1000');
+                throw new BadRequestException(1000);
             }
 
             const {email, password} = userInfo;
             if (psword !== password) {
-                throw new UnauthorizedException('1003')
+                throw new UnauthorizedException(1003)
             }
             
             const {accessToken} = await this.authService.accessToken(email);

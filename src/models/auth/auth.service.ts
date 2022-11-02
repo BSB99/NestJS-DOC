@@ -47,13 +47,13 @@ export class AuthService {
                 case 'INVALID_TOKEN':
                 case 'TOKEN_IS_ARRAY':
                 case 'NO_USER':
-                    throw new UnauthorizedException('1003');
+                    throw new UnauthorizedException(1003);
 
                 case 'jwt expired':
-                    throw new GoneException('1010');
+                    throw new GoneException(1010);
                 
                 default:
-                    throw new InternalServerErrorException('1500')
+                    throw new InternalServerErrorException(1500)
             }
         }   
     }
@@ -68,13 +68,13 @@ export class AuthService {
                 case 'INVALID_TOKEN':
                 case 'TOKEN_IS_ARRAY':
                 case 'NO_USER':
-                    throw new UnauthorizedException('1003');
+                    throw new UnauthorizedException(1003);
 
                 case 'jwt expired':
-                    throw new GoneException('1010');
+                    throw new GoneException(1010);
                 
                 default:
-                    throw new InternalServerErrorException('1500')
+                    throw new InternalServerErrorException(1500)
             }
         }   
     }
@@ -84,7 +84,7 @@ export class AuthService {
             const userInfo = await this.usersRepository.signIn(id);
             
             if (userInfo === null) {
-                throw new NotFoundException('1000');
+                throw new NotFoundException(1000);
             }
 
             const currentRefreshToken = await this.refreshTokenDecode(resRefreshToken);
@@ -95,7 +95,7 @@ export class AuthService {
             return {accessToken};
         }
 
-        throw new UnauthorizedException('1003');
+        throw new UnauthorizedException(1003);
         } catch (err) {
             throw err;
         }

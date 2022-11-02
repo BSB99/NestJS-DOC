@@ -28,12 +28,13 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
 
         if (typeof(errInfo) === "object") {
             if (errInfo.length >= 2 && typeof(errInfo) === "object") {
+                const code = 1055
                 return response.status(status).json({
                     success: false,
                     statusCode: status,
                     error: {
-                        code: '1055',
-                        message: errInfo[0],
+                        code: code,
+                        message: errorObj[code],
                     }   
                 });
             }
@@ -41,7 +42,7 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
                 success: false,
                 statusCode: status,
                 error: {
-                    code: '1056',
+                    code: 1056,
                     message: errInfo[0],
                 }   
             });

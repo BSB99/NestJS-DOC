@@ -44,7 +44,7 @@ export class StudentsService {
         });
 
         if (!student) {
-            throw new NotFoundException(`해당 ${no}번 학생의 정보는 존재하지 않습니다.`);
+            throw new NotFoundException(1000);
         }
         const {affected} = await this.studentsInfo.update(no, updateStudentDto);
 
@@ -59,7 +59,7 @@ export class StudentsService {
         const {affected} = await this.studentsInfo.delete(no);
         
         if (!affected) {
-            throw new NotFoundException(`해당하는 ${no}번 학생의 정보는 존재하지 않습니다.`);
+            throw new NotFoundException(1000);
         };
 
         return affected;
