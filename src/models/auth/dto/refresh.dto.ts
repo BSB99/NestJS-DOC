@@ -6,7 +6,7 @@ export class RefreshDto {
         example: 'test',
         description: 'id를 입력 해 주세요'
     })
-    @IsString()
-    @IsNotEmpty()
+    @IsString({message: '문자만 입력 해 주세요.'})
+    @IsNotEmpty({message: 'id를 입력 해 주세요'})
     id: string;
 }

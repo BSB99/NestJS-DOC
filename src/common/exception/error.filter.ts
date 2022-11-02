@@ -24,14 +24,35 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
             message: errorObj[status],
         };
 
-        const code = error.message;
+        const errInfo = error.message;
+
+        if (typeof(errInfo) === "object") {
+            if (errInfo.length >= 2 && typeof(errInfo) === "object") {
+                return response.status(status).json({
+                    success: false,
+                    statusCode: status,
+                    error: {
+                        code: '1055',
+                        message: errInfo[0],
+                    }   
+                });
+            }
+            return response.status(status).json({
+                success: false,
+                statusCode: status,
+                error: {
+                    code: '1056',
+                    message: errInfo[0],
+                }   
+            });
+        }
 
         return response.status(status).json({
             success: false,
             statusCode: status,
             error: {
-                code,
-                message: errorObj[code],
+                code: errInfo,
+                message: errorObj[errInfo],
             }   
         });
     }

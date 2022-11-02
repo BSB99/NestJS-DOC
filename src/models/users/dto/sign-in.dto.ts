@@ -4,17 +4,17 @@ import { IsNotEmpty, IsString } from "class-validator";
 export class SignInDto {
     @ApiProperty({
         example: 'test',
-        description: 'id를 입력 해 주세요'
+        description: 'id를 입력해 주세요'
     })
-    @IsString()
-    @IsNotEmpty()
-    id: string
+    @IsString({message: 'id: 문자만 입력해 주세요.'})
+    @IsNotEmpty({message: 'id를 입력해 주세요.'})
+    id: string;
 
     @ApiProperty({
         example: '1234',
-        description: 'password를 입력 해 주세요'
+        description: 'password를 입력해 주세요'
     })
-    @IsString()
-    @IsNotEmpty()
-    psword: string
+    @IsString({message: 'psword: 문자만 입력해 주세요.'})
+    @IsNotEmpty({message: 'psword를 입력해 주세요.'})
+    psword: string;
 }
