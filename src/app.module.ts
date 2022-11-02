@@ -7,44 +7,17 @@ import { SchoolsModule } from './models/schools/schools.module';
 import { UsersModule } from './models/users/users.module';
 import { AuthModule } from './models/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { Student } from './models/students/entity/Students.entity';
-import { User } from './models/users/entity/users.entity';
-import { School } from './models/schools/entity/Schools.entity';
+import { testDB_2 } from './configs/database/testDB_2.config';
+import { testDB_1 } from './configs/database/testDB_1.config';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
   //CatsModule.forRoot([User]) -> CatsModule을 User에서 참조하겠다.
   //.forRoot({isGlobal: true}) -> 전역 모듈로 쓰겠다.
   imports: [
-  ConfigModule.forRoot({ 
-    isGlobal: true, 
-    envFilePath: process.env.NODE_ENV === "production" ? ".env.production" : ".env.development",
-  }),
-  
-  TypeOrmModule.forRoot({
-    timezone: "Asia/Seoul",
-    name: process.env.TESTDB_1_NAME,  
-    type: "mysql",
-    host : process.env.TESTDB_1_HOST,
-    port : +process.env.TESTDB_1_PORT,
-    username : process.env.TESTDB_1_USERNAME,
-    password : process.env.TESTDB_1_PSWORD,
-    database : process.env.TESTDB_1_DATABASE,
-    entities: [Student, User],
-    synchronize: Boolean(process.env.TESTDB_1_SYNCHRONIZE)}),
-
-  TypeOrmModule.forRoot({
-    timezone: "Asia/Seoul",
-    name: process.env.TESTDB_2_NAME,  
-    type: "mysql",
-    host : process.env.TESTDB_2_HOST,
-    port : +process.env.TESTDB_2_PORT,
-    username : process.env.TESTDB_2_USERNAME,
-    password : process.env.TESTDB_2_PSWORD,
-    database : process.env.TESTDB_2_DATABASE,
-    entities: [School],
-    synchronize: Boolean(process.env.TESTDB_2_SYNCHRONIZE)
-  }),
+  TypeOrmModule.forRoot({...testDB_1}),
+  TypeOrmModule.forRoot({...testDB_2}),
+  ConfigModule.forRoot({ isGlobal: true }),
   StudentsModule,
   SchoolsModule,
   UsersModule,
