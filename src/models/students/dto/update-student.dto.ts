@@ -56,6 +56,6 @@ export class UpdateStudentDto {
   })
   @IsString()
   // 15 이하 까지
-  @MaxLength(15, {message: '15자 이하로 작성 해 주세요'})
+  @MaxLength(15, {message: 'summary: 15자 이하로 작성 해 주세요'})
   summary: string;
   }
