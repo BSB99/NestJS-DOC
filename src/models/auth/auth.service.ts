@@ -1,4 +1,5 @@
 import { GoneException, Injectable, InternalServerErrorException, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from 'src/models/users/repository/users.repository';
 
@@ -7,7 +8,9 @@ export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
 
-        private readonly usersRepository: UsersRepository
+        private readonly usersRepository: UsersRepository,
+
+        private readonly configService: ConfigService
     ){}
 
     async accessToken(email: string) {
@@ -15,7 +18,7 @@ export class AuthService {
             const payload = { email };
 
             return {
-                accessToken: this.jwtService.sign(payload, {secret:'SECRET_KEY', expiresIn: '1m'})
+                accessToken: this.jwtService.sign(payload, {secret: this.configService.get<string>('ACCESS_KEY'), expiresIn: this.configService.get<string>('ACCESS_KEY_EXPIRESIN')})
             }
         } catch(err) {
             throw err;
@@ -27,7 +30,7 @@ export class AuthService {
             const payload = { email};
 
             return {
-                refreshToken: this.jwtService.sign(payload, {secret:'SECRET_REFRESH_KEY', expiresIn: '10m'})
+                refreshToken: this.jwtService.sign(payload, {secret:this.configService.get<string>('REFRESH_KEY'), expiresIn: this.configService.get<string>('REFRESH_KEY_EXPIRESIN')})
             }
         } catch (err) {
             throw err;
@@ -36,7 +39,7 @@ export class AuthService {
 
     async accessTokenDecode(jwtToken: string) {
         try {
-            const {email} = await this.jwtService.verify(jwtToken, {secret: 'SECRET_KEY'});
+            const {email} = await this.jwtService.verify(jwtToken, {secret: this.configService.get<string>('ACCESS_KEY')});
 
             return {email};
         } catch (err) {
@@ -57,7 +60,7 @@ export class AuthService {
 
     async refreshTokenDecode(jwtToken: string) {
         try {
-            const {email} = await this.jwtService.verify(jwtToken, {secret: 'SECRET_REFRESH_KEY'});
+            const {email} = await this.jwtService.verify(jwtToken, {secret: this.configService.get<string>('REFRESH_KEY')});
 
             return {email};
         } catch (err) {

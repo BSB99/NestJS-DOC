@@ -1,15 +1,12 @@
-import { Body, Controller, Get, Header, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Query, Redirect, SetMetadata, UseFilters, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, Param, ParseIntPipe, Post, Query, Redirect, UseInterceptors } from '@nestjs/common';
 import { Cat } from './interface/cat.interface';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { ForbiddenException } from 'src/common/exception/forbidden.filter';
-import { HttpExceptionFilter } from 'src/common/exception/http-exception.filters';
-import { JoiValidationPipe } from 'src/common/pipe/joi.validation.pipe';
 import { ValidationPipe } from 'src/common/pipe/validation.pipe';
 import { Roles } from 'src/common/decorators/Roles';
 import { LoggingInterceptor } from 'src/common/interceptor/logging';
 import { TransformInterceptor } from 'src/common/interceptor/transform';
-import { ExcludeNullInterceptor } from 'src/common/interceptor/excludeNull';
 import { TimeoutInterceptor } from 'src/common/interceptor/timeout';
 import { Cats } from 'src/common/decorators/cat';
 
@@ -32,7 +29,6 @@ export class CatsController {
     
     async findAll(@Cats('name') name: string): Promise<Cat[]> {
         try {
-            console.log(name);
             return this.catsService.findAll();
         } catch(err){
             // 사용자 정의 예외 필터를 적용 한 예시

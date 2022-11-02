@@ -32,7 +32,6 @@ async function bootstrap() {
   
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpErrorExceptionFilter());
-
   /* 
   
   글로벌 예외 필터
