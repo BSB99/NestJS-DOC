@@ -23,18 +23,17 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
             },
             message: errorObj[status],
         };
-
+        
         const errInfo = error.message;
-
+        
         if (typeof(errInfo) === "object") {
             if (errInfo.length >= 2 && typeof(errInfo) === "object") {
-                const code = 1055
                 return response.status(status).json({
                     success: false,
                     statusCode: status,
                     error: {
-                        code: code,
-                        message: errorObj[code],
+                        code: 1055,
+                        message: errInfo[0],
                     }   
                 });
             }
@@ -46,15 +45,24 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
                     message: errInfo[0],
                 }   
             });
+        } else if (typeof(errInfo) === "string") {
+            return response.status(status).json({
+                success: false,
+                statusCode: status,
+                error: {
+                    code: 1001,
+                    message: errorObj[1001],
+                }   
+            });
+        } else {
+            return response.status(status).json({
+                success: false,
+                statusCode: status,
+                error: {
+                    code: errInfo,
+                    message: errorObj[errInfo],
+                }   
+            });
         }
-
-        return response.status(status).json({
-            success: false,
-            statusCode: status,
-            error: {
-                code: errInfo,
-                message: errorObj[errInfo],
-            }   
-        });
     }
 }
