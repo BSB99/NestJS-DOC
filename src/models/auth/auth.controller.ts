@@ -27,7 +27,7 @@ export class AuthController {
     @Get('decode-uri/:jwtToken')
     async accessTokenDecode(@Param('jwtToken') jwtToken: string) {
         try {
-            const response: object = await this.authService.accessTokenDecode(jwtToken);
+            const response: object = await this.authService.tokenDecode(jwtToken, 'AccessToken');
 
             return response;
         } catch(err) {
@@ -39,7 +39,7 @@ export class AuthController {
     @Get('refresh-token-decode-uri/:jwtToken')
     async refreshTokenDecode(@Param('jwtToken') jwtToken: string) {
         try {
-            const response: object = await this.authService.refreshTokenDecode(jwtToken);
+            const response: object = await this.authService.tokenDecode(jwtToken);
 
             return response;
         } catch(err) {

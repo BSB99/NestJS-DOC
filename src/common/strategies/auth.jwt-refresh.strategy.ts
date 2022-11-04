@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Request } from "express";
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -19,7 +19,14 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     try {
         const refreshToken = req.get('authorization').split('Bearer ')[1];
         const {id} = req.body
-    
+
+        const {type} = await this.authService.tokenDecode(refreshToken);
+        
+        if (type !== 'RefreshToken') {
+          throw new UnauthorizedException(1003);
+        }
+        
+        
         return await this.authService.refreshTokenConfirm(refreshToken, id);
     } catch (err) {
         throw err;

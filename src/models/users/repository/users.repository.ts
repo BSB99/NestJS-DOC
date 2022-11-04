@@ -13,7 +13,7 @@ export class UsersRepository{
     async signIn(id: string) {
         try {
             const user = await this.usersRepository.createQueryBuilder('users')
-            .select(['users.email', 'users.password', 'users.refreshToken'])
+            .select(['users.id','users.email', 'users.password', 'users.refreshToken'])
             .where('users.id = :id', {id})
             .getOne();
         

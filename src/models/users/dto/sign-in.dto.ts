@@ -18,3 +18,8 @@ export class SignInDto {
     @IsNotEmpty({message: 'psword를 입력해 주세요.'})
     psword: string;
 }
+
+export class Test {
+    @IsNumber()
+    a : number;
+}

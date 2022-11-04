@@ -20,8 +20,8 @@ export class UsersService {
                 throw new UnauthorizedException(1003)
             }
             
-            const {accessToken} = await this.authService.accessToken(email);
-            const {refreshToken} = await this.authService.refreshToken(email);
+            const {accessToken} = await this.authService.issuanceToken(email, userInfo.id,'AccessToken');
+            const {refreshToken} = await this.authService.issuanceToken(email);
 
             await this.usersRepository.refreshToken(id, refreshToken);
 

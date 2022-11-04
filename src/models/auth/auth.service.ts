@@ -13,35 +13,78 @@ export class AuthService {
         private readonly configService: ConfigService
     ){}
 
-    async accessToken(email: string) {
+    async issuanceToken(email: string, id?: string, type?: string) {
         try {
-            const payload = { email };
+            if (type === 'AccessToken') {
+                const payload = { email, type: 'AccessToken', user_id: id };
 
-            return {
-                accessToken: this.jwtService.sign(payload, {secret:this.configService.get<string>('ACCESS_KEY'), expiresIn: this.configService.get<string>('ACCESS_KEY_EXPIRESIN')})
+                return {
+                    accessToken: this.jwtService.sign(payload, 
+                        {
+                            secret:this.configService.get<string>('ACCESS_KEY'), 
+                            expiresIn: this.configService.get<string>('ACCESS_KEY_EXPIRESIN')
+                        }
+                    )
+                }
             }
-        } catch(err) {
-            throw err;
-        }
-    }
-
-    async refreshToken(email: string) {
-        try {
-            const payload = { email};
+            
+            // RefreshToken payload에는 중요한 값 저장 X
+            const payload = { email, type: 'RefreshToken' };
 
             return {
-                refreshToken: this.jwtService.sign(payload, {secret:this.configService.get<string>('REFRESH_KEY'), expiresIn: this.configService.get<string>('REFRESH_KEY_EXPIRESIN')})
+                refreshToken: this.jwtService.sign(payload, 
+                    {
+                        secret:this.configService.get<string>('REFRESH_KEY'),   
+                        expiresIn: this.configService.get<string>('REFRESH_KEY_EXPIRESIN')
+                    }
+                )
             }
         } catch (err) {
             throw err;
         }
     }
 
-    async accessTokenDecode(jwtToken: string) {
-        try {
-            const {email} = await this.jwtService.verify(jwtToken, {secret: this.configService.get<string>('ACCESS_KEY')});
+     // async accessToken(email: string, id?: string) {
+    //     try {
+    //         const payload = { email, type: 'AccessToken', user_id: id };
 
-            return {email};
+    //         return {
+    //             accessToken: this.jwtService.sign(payload, 
+    //                 {
+    //                     secret:this.configService.get<string>('ACCESS_KEY'), 
+    //                     expiresIn: this.configService.get<string>('ACCESS_KEY_EXPIRESIN')
+    //                 }
+    //             )
+    //         }
+    //     } catch(err) {
+    //         throw err;
+    //     }
+    // }
+
+    // async refreshToken(email: string) {
+    //     try {
+    //         const payload = { email, type: 'RefreshToken' };
+
+    //         return {
+    //             refreshToken: this.jwtService.sign(payload, 
+    //                 {
+    //                     secret:this.configService.get<string>('REFRESH_KEY'), 
+    //                     expiresIn: this.configService.get<string>('REFRESH_KEY_EXPIRESIN')
+    //                 }
+    //             )
+    //         }
+    //     } catch (err) {
+    //         throw err;
+    //     }
+    // }
+
+    async tokenDecode(jwtToken: string, type?: string) {
+        try {
+            if (type === 'AccessToken') {
+                return await this.jwtService.verify(jwtToken, {secret: this.configService.get<string>('ACCESS_KEY')});
+            }
+
+            return await this.jwtService.verify(jwtToken, {secret: this.configService.get<string>('REFRESH_KEY')});
         } catch (err) {
             switch (err.message) {
                 case 'INVALID_TOKEN':
@@ -58,26 +101,47 @@ export class AuthService {
         }   
     }
 
-    async refreshTokenDecode(jwtToken: string) {
-        try {
-            const {email} = await this.jwtService.verify(jwtToken, {secret: this.configService.get<string>('REFRESH_KEY')});
+    // async accessTokenDecode(jwtToken: string) {
+    //     try {
+    //         const payload = await this.jwtService.verify(jwtToken, {secret: this.configService.get<string>('ACCESS_KEY')});
 
-            return {email};
-        } catch (err) {
-            switch (err.message) {
-                case 'INVALID_TOKEN':
-                case 'TOKEN_IS_ARRAY':
-                case 'NO_USER':
-                    throw new UnauthorizedException(1003);
+    //         return payload;
+    //     } catch (err) {
+    //         switch (err.message) {
+    //             case 'INVALID_TOKEN':
+    //             case 'TOKEN_IS_ARRAY':
+    //             case 'NO_USER':
+    //                 throw new UnauthorizedException(1003);
 
-                case 'jwt expired':
-                    throw new GoneException(1010);
+    //             case 'jwt expired':
+    //                 throw new GoneException(1010);
                 
-                default:
-                    throw new InternalServerErrorException(1500)
-            }
-        }   
-    }
+    //             default:
+    //                 throw new InternalServerErrorException(1500)
+    //         }
+    //     }   
+    // }
+
+    // async refreshTokenDecode(jwtToken: string) {
+    //     try {
+    //         const payload = await this.jwtService.verify(jwtToken, {secret: this.configService.get<string>('REFRESH_KEY')});
+
+    //         return payload;
+    //     } catch (err) {
+    //         switch (err.message) {
+    //             case 'INVALID_TOKEN':
+    //             case 'TOKEN_IS_ARRAY':
+    //             case 'NO_USER':
+    //                 throw new UnauthorizedException(1003);
+
+    //             case 'jwt expired':
+    //                 throw new GoneException(1010);
+                
+    //             default:
+    //                 throw new InternalServerErrorException(1500)
+    //         }
+    //     }   
+    // }
 
     async refreshTokenConfirm(resRefreshToken:string, id: string) {
         try {
@@ -87,11 +151,11 @@ export class AuthService {
                 throw new NotFoundException(1000);
             }
 
-            const currentRefreshToken = await this.refreshTokenDecode(resRefreshToken);
-            const cerfitcateRefreshToken = await this.refreshTokenDecode(userInfo.refreshToken);
+            const currentRefreshToken = await this.tokenDecode(resRefreshToken);
+            const cerfitcateRefreshToken = await this.tokenDecode(userInfo.refreshToken);
             
         if (currentRefreshToken.email === cerfitcateRefreshToken.email) {
-            const accessToken = await this.accessToken(cerfitcateRefreshToken.email);
+            const accessToken = await this.issuanceToken(cerfitcateRefreshToken.email, cerfitcateRefreshToken.id, 'AccessToken');
             return {accessToken};
         }
 
