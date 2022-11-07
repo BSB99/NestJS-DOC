@@ -18,14 +18,14 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   async validate(req: Request) {
     try {
         const refreshToken = req.get('authorization').split('Bearer ')[1];
-        const {id} = req.body
+        const {id} = req.body;
 
-        const {type} = await this.authService.tokenDecode(refreshToken);
+        // 인수 'RefreshToken'은 클라이언트에서 받은 토큰을 디코드해서 나온 Type 값.  
+        const {type} = await this.authService.tokenDecode(refreshToken, 'RefreshToken');
         
         if (type !== 'RefreshToken') {
           throw new UnauthorizedException(1003);
         }
-        
         
         return await this.authService.refreshTokenConfirm(refreshToken, id);
     } catch (err) {

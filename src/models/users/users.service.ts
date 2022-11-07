@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from 'src/models/auth/auth.service';
 import { UsersRepository } from './repository/users.repository';
 @Injectable()
@@ -11,8 +11,9 @@ export class UsersService {
     async signIn({id, psword}) {
         try {
             const userInfo = await this.usersRepository.signIn(id);
+            
             if (userInfo === null) {
-                throw new BadRequestException(1000);
+                throw new NotFoundException(1000);
             }
 
             const {email, password} = userInfo;
@@ -20,8 +21,8 @@ export class UsersService {
                 throw new UnauthorizedException(1003)
             }
             
-            const {accessToken} = await this.authService.issuanceToken(email, userInfo.id,'AccessToken');
-            const {refreshToken} = await this.authService.issuanceToken(email);
+            const {accessToken} = await this.authService.issuanceToken(email, id, 'AccessToken');
+            const {refreshToken} = await this.authService.issuanceToken(email, null, 'RefreshToken');
 
             await this.usersRepository.refreshToken(id, refreshToken);
 
