@@ -14,9 +14,7 @@ export class SchoolsController {
     @Get()
     async allSchools(): Promise<object> {
         try {
-            const response: School[] = await this.schoolsService.allSchools();
-
-            return response;
+            return await this.schoolsService.allSchools();
         } catch(err) {
             throw err;
         }

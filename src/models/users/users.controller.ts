@@ -13,9 +13,7 @@ export class UsersController {
     @Post()
     async signIn(@Body() signInDto: SignInDto) {
         try {
-            const response:object = await this.usersService.signIn(signInDto);
-
-            return response;
+            return await this.usersService.signIn(signInDto);
         } catch (err) {
             throw err;
         }

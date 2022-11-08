@@ -13,7 +13,7 @@ export class StudentsService {
         private studentsInfo: Repository<Student>,
 
         private readonly studentRepository: StudentsRepository
-      ) {}
+    ) {}
     
     async allStudents() {
         try {
@@ -43,9 +43,9 @@ export class StudentsService {
     async update(no: number, updateStudentDto: UpdateStudentDto) {
         try {
             const student: Student = await this.studentsInfo.findOne({
-            where: {
-                no,
-            },
+                where: {
+                    no,
+                },
             });
 
         if (!student) {
