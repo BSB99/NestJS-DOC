@@ -15,30 +15,30 @@ export class SchoolsService {
 
       async allSchools(): Promise<School[]> {
         try{
-            const Schools: School[] = await this.schoolsRepository.find()
-            return Schools;
+            const schools: School[] = await this.schoolsRepository.find()
+            return schools;
         }catch(err){
             throw err;
         }
       }
 
-      async create(createAnimalDto: CreateSchoolDto): Promise<School> {
+      async create(createSchoolDto: CreateSchoolDto): Promise<School> {
         try {
-          const { name }: CreateSchoolDto = createAnimalDto;
+          const { name }: CreateSchoolDto = createSchoolDto;
 
-          const animal: School = this.schoolsRepository.create({
+          const school: School = this.schoolsRepository.create({
             name,
           });
           
-          await this.schoolsRepository.save(animal);
-        
-          return animal;
+          await this.schoolsRepository.save(school);
+          
+          return school;
         } catch(err) {
           throw err;
         }
       }
 
-      async update(no: number, updateAnimalDto: UpdateSchoolDto):Promise<number> {
+      async update(no: number, updateSchoolDto: UpdateSchoolDto):Promise<number> {
         try {
           const animal: School = await this.schoolsRepository.findOne({
             where: {
@@ -49,7 +49,7 @@ export class SchoolsService {
           if (!animal) {
             throw new NotFoundException(1000);
           }
-          const {affected} = await this.schoolsRepository.update(no, updateAnimalDto);
+          const {affected} = await this.schoolsRepository.update(no, updateSchoolDto);
 
           return affected;
         } catch(err) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -23,15 +23,13 @@ export class StudentsController {
 
     @ApiOperation({ summary: '학생 정보 생성 API', description: '학생 정보 생성'})
     @Post()
-    async create(@Body() createStudentDto: CreateStudentDto):Promise<object> {
+    async create(@Body() createStudentDto: CreateStudentDto) {
         try {
             const response = await this.studentsService.create(createStudentDto);
 
             if (!response) {
-                return {success: false};
+                throw new InternalServerErrorException(1500);
             }
-
-            return {msg: '학생 정보가 등록 되었습니다.'};
         } catch(err) {
             throw err;
         }
@@ -39,15 +37,14 @@ export class StudentsController {
 
     @ApiOperation({ summary: '학생 정보 수정 API', description: '학생 정보 수정'})
     @Patch(':no')
-    async update(@Param('no') no: number, @Body() updateStudentDto: UpdateStudentDto):Promise<object> {
+    async update(@Param('no') no: number, @Body() updateStudentDto: UpdateStudentDto) {
         try {
         const response = await this.studentsService.update(no, updateStudentDto);
 
         if (!response) {
-            return {success: false};
+            throw new InternalServerErrorException(1500);
         }
 
-        return {msg: '학생 정보가 수정 되었습니다.'};
     } catch (err) {
         throw err;
     }
@@ -55,15 +52,14 @@ export class StudentsController {
 
     @ApiOperation({ summary: '학생 정보 삭제 API', description: '학생 정보 삭제'})
     @Delete(':no')
-    async delete(@Param('no') no: number):Promise<object> {
+    async delete(@Param('no') no: number) {
         try {
             const response = await this.studentsService.delete(no);
     
             if (!response) {
-                return {success: false};
+                throw new InternalServerErrorException(1500);
             }
     
-            return {msg: '학생 정보가 삭제 되었습니다.'};
     } catch (err) {
         throw err;
     }

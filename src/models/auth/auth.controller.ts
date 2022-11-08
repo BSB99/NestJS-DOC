@@ -17,7 +17,6 @@ export class AuthController {
     @Get()
     async qualificate() {
         try {
-            return {msg: '인증 완료'};
         } catch (err) {
             throw err;
         }
@@ -27,7 +26,7 @@ export class AuthController {
     @Get('decode-uri/:jwtToken')
     async accessTokenDecode(@Param('jwtToken') jwtToken: string) {
         try {
-            const response: object = await this.authService.tokenDecode(jwtToken, 'AccessToken');
+            const response: object = await this.authService.accessTokenDecode(jwtToken);
 
             return response;
         } catch(err) {
@@ -39,7 +38,7 @@ export class AuthController {
     @Get('refresh-token-decode-uri/:jwtToken')
     async refreshTokenDecode(@Param('jwtToken') jwtToken: string) {
         try {
-            const response: object = await this.authService.tokenDecode(jwtToken, 'RefreshToken');
+            const response: object = await this.authService.refreshTokenDecode(jwtToken);
 
             return response;
         } catch(err) {
@@ -51,7 +50,7 @@ export class AuthController {
     @ApiBearerAuth('refresh-token')
     @Post('refresh')
     @UseGuards(AuthGuard('jwt-refresh'))
-    async refreshToken(@Body() refreshDto: RefreshDto, @Request() req){
+    async refreshToken(@Body() refreshDto: RefreshDto, @Request() req) {
         try {
             return req.user.accessToken;
         } catch(err) {

@@ -20,9 +20,4 @@ export class UsersController {
             throw err;
         }
     }
-
-    @Get()
-    async test(@Query() custom: Test) {
-        return custom;
-    }
 }

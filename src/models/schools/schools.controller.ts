@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SchoolsService } from './schools.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
@@ -24,15 +24,14 @@ export class SchoolsController {
 
     @ApiOperation({ summary: '학교 정보 생성 API', description: '학교 정보 생성'})
     @Post()
-    async create(@Body() createAnimalDto: CreateSchoolDto): Promise<object> {
+    async create(@Body() createSchoolDto: CreateSchoolDto) {
         try {
-            const response: School = await this.schoolsService.create(createAnimalDto);
+            const response: School = await this.schoolsService.create(createSchoolDto);
 
             if (!response) {
-                return {success: false};
+                throw new InternalServerErrorException(1500);
             } 
 
-            return {msg: '학교 정보가 등록 되었습니다.'}
         } catch(err) {
             throw err;
         }
@@ -40,15 +39,14 @@ export class SchoolsController {
 
     @ApiOperation({ summary: '학교 정보 수정 API', description: '학교 정보 수정'})
     @Patch(':no')
-    async update(@Param('no') no: number, @Body() updateAnimalDto: UpdateSchoolDto): Promise<object> {
+    async update(@Param('no') no: number, @Body() updateSchoolDto: UpdateSchoolDto) {
         try {
-            const response: number = await this.schoolsService.update(no, updateAnimalDto);
+            const response: number = await this.schoolsService.update(no, updateSchoolDto);
 
             if (!response) {
-                return {success: false};
+                throw new InternalServerErrorException(1500);
             } 
 
-            return {msg: '학교 정보가 수정 되었습니다.'}
         } catch(err) {
             throw err;
         }
@@ -56,15 +54,14 @@ export class SchoolsController {
 
     @ApiOperation({ summary: '학교 정보 삭제 API', description: '학교 정보 삭제'})
     @Delete(':no')
-    async delete(@Param('no') no: number): Promise<object> {
+    async delete(@Param('no') no: number) {
         try {
             const response: number = await this.schoolsService.delete(no);
 
             if (!response) {
-                return {success: false};
+                throw new InternalServerErrorException(1500);
             } 
 
-            return {msg: '학교 정보가 삭제 되었습니다.'}
         } catch(err) {
             throw err;
         }
