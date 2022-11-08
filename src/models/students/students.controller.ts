@@ -13,9 +13,7 @@ export class StudentsController {
     @Get()
     async allStudents():Promise<object> {
         try {
-            const response = await this.studentsService.allStudents();
-
-            return response;
+            return await this.studentsService.allStudents();
         } catch(err) {
             throw err;
         }
@@ -25,11 +23,7 @@ export class StudentsController {
     @Post()
     async create(@Body() createStudentDto: CreateStudentDto) {
         try {
-            const response = await this.studentsService.create(createStudentDto);
-
-            if (!response) {
-                throw new InternalServerErrorException(1500);
-            }
+            await this.studentsService.create(createStudentDto);
         } catch(err) {
             throw err;
         }
@@ -39,12 +33,7 @@ export class StudentsController {
     @Patch(':no')
     async update(@Param('no') no: number, @Body() updateStudentDto: UpdateStudentDto) {
         try {
-        const response = await this.studentsService.update(no, updateStudentDto);
-
-        if (!response) {
-            throw new InternalServerErrorException(1500);
-        }
-
+        await this.studentsService.update(no, updateStudentDto);
     } catch (err) {
         throw err;
     }
@@ -54,16 +43,11 @@ export class StudentsController {
     @Delete(':no')
     async delete(@Param('no') no: number) {
         try {
-            const response = await this.studentsService.delete(no);
-    
-            if (!response) {
-                throw new InternalServerErrorException(1500);
-            }
-    
-    } catch (err) {
-        throw err;
+            await this.studentsService.delete(no);
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
 
 }

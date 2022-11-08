@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateSchoolDto } from './dto/create-school.dto';
@@ -32,6 +32,10 @@ export class SchoolsService {
           
           await this.schoolsRepository.save(school);
           
+          if (!school) {
+              throw new InternalServerErrorException(1500);
+          }
+
           return school;
         } catch(err) {
           throw err;
@@ -40,17 +44,21 @@ export class SchoolsService {
 
       async update(no: number, updateSchoolDto: UpdateSchoolDto):Promise<number> {
         try {
-          const animal: School = await this.schoolsRepository.findOne({
+          const school: School = await this.schoolsRepository.findOne({
             where: {
               no,
             },
           });
       
-          if (!animal) {
+          if (!school) {
             throw new NotFoundException(1000);
           }
           const {affected} = await this.schoolsRepository.update(no, updateSchoolDto);
 
+          if (!affected) {
+            throw new InternalServerErrorException(1500);
+          }
+          
           return affected;
         } catch(err) {
           throw err;

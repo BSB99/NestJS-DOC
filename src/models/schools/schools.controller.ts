@@ -26,12 +26,7 @@ export class SchoolsController {
     @Post()
     async create(@Body() createSchoolDto: CreateSchoolDto) {
         try {
-            const response: School = await this.schoolsService.create(createSchoolDto);
-
-            if (!response) {
-                throw new InternalServerErrorException(1500);
-            } 
-
+            await this.schoolsService.create(createSchoolDto);
         } catch(err) {
             throw err;
         }
@@ -41,12 +36,7 @@ export class SchoolsController {
     @Patch(':no')
     async update(@Param('no') no: number, @Body() updateSchoolDto: UpdateSchoolDto) {
         try {
-            const response: number = await this.schoolsService.update(no, updateSchoolDto);
-
-            if (!response) {
-                throw new InternalServerErrorException(1500);
-            } 
-
+            await this.schoolsService.update(no, updateSchoolDto);
         } catch(err) {
             throw err;
         }
@@ -56,12 +46,7 @@ export class SchoolsController {
     @Delete(':no')
     async delete(@Param('no') no: number) {
         try {
-            const response: number = await this.schoolsService.delete(no);
-
-            if (!response) {
-                throw new InternalServerErrorException(1500);
-            } 
-
+            await this.schoolsService.delete(no);
         } catch(err) {
             throw err;
         }

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -29,6 +29,11 @@ export class StudentsService {
             const student = this.studentsInfo.create({name, age, school, email, password, summary});
             
             await this.studentsInfo.save(student);
+
+            if (!student) {
+                throw new InternalServerErrorException(1500);
+            }
+
             return student;
         } catch(err) {
             throw err;
@@ -39,14 +44,18 @@ export class StudentsService {
         try {
             const student: Student = await this.studentsInfo.findOne({
             where: {
-            no,
+                no,
             },
-        });
+            });
 
         if (!student) {
             throw new NotFoundException(1000);
         }
         const {affected} = await this.studentsInfo.update(no, updateStudentDto);
+
+        if (!affected) {
+            throw new InternalServerErrorException(1500);
+        }
 
         return affected;
         } catch(err) {
@@ -56,13 +65,23 @@ export class StudentsService {
 
     async delete(no: number) {
         try {
-        const {affected} = await this.studentsInfo.delete(no);
-        
-        if (!affected) {
-            throw new NotFoundException(1000);
-        };
+            const student: Student = await this.studentsInfo.findOne({
+                where: {
+                    no,
+                },
+            });
+            
+            if (!student) {
+                throw new NotFoundException(1000);
+            };
 
-        return affected;
+            const {affected} = await this.studentsInfo.delete(no);
+
+            if (!affected) {
+                throw new InternalServerErrorException(1500);
+            }
+
+            return affected;
         } catch (err) {
             throw err;
         }
