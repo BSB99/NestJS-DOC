@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException, NotFoundException, BadRequestExcepti
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { object } from 'joi';
-import { Payload } from 'src/common/interface/error.interface';
+import { Payload, Secret } from 'src/common/interface/token.interface';
 import { UsersRepository } from 'src/models/users/repository/users.repository';
 import { ErrorCustoms } from '../../common/customs/error';
 
@@ -18,7 +18,21 @@ export class AuthService {
         private readonly errorCustoms: ErrorCustoms
     ){}
 
-    async issueanceToken(payload: Payload, secret) {
+
+    async issuanceToken(payload: Payload, secret: Secret) {
+        try {
+            return this.jwtService.sign(payload, {
+                secret: this.configService.get<string>(secret.key),
+                expiresIn: this.configService.get<string>(`${secret.expiresin}`)
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /*
+    두번째 코드
+    async issuanceToken(payload: Payload, secret) {
         try {
             switch(payload.type) {
                 case 'accessToken':
@@ -41,9 +55,12 @@ export class AuthService {
         } catch (err) {
             throw err;
         }
-    }
+    }*/
+    
+
 
     /*
+    첫번째 코드
     async accessToken(payload: object, secret) {
         try {
             return this.jwtService.sign(payload, 
@@ -70,7 +87,7 @@ export class AuthService {
         }
     }*/
 
-    async decodeToken(token: string, secret) {
+    async decodeToken(token: string, secret: string) {
         try {
             return await this.jwtService.verify(token, {
                 secret: this.configService.get<string>(secret)
@@ -113,11 +130,10 @@ export class AuthService {
             const certificateRefreshToken = await this.decodeToken(userInfo.refreshToken, 'REFRESH_KEY');
             
         if (currentRefreshToken.email === certificateRefreshToken.email) {
-            const accessToken = await this.issueanceToken(
+            const accessToken = await this.issuanceToken(
                 {
                     email : certificateRefreshToken.email, 
                     id: certificateRefreshToken.id,
-                    type: 'accessToken'
                 },
                 {key: 'ACCESS_KEY', expiresin:'ACCESS_KEY_EXPIRESIN'}
             );

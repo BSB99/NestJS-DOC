@@ -3,9 +3,3 @@ export interface ErrorObj {
     statusCode: number;
     message: number;
   }
-
-export interface Payload {
-  email: string;
-  id? : string;
-  type: string;
-}

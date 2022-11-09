@@ -19,12 +19,6 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     try {
         const refreshToken = req.get('authorization').split('Bearer ')[1];
         const {id} = req.body;
-        
-        const {type} = await this.authService.decodeToken(refreshToken,'REFRESH_KEY');
-
-        if (type !== 'refreshToken') {
-          throw new BadRequestException(1001);
-        }
 
         return await this.authService.refreshTokenConfirm(refreshToken, id);
     } catch (err) {
