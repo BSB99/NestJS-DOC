@@ -26,7 +26,7 @@ export class AuthController {
     @Get('decode-uri/:jwtToken')
     async accessTokenDecode(@Param('jwtToken') jwtToken: string) {
         try {
-            return await this.authService.accessTokenDecode(jwtToken);
+            return await this.authService.decodeToken(jwtToken, 'ACCESS_KEY');
         } catch(err) {
             throw err;
         }
@@ -36,7 +36,7 @@ export class AuthController {
     @Get('refresh-token-decode-uri/:jwtToken')
     async refreshTokenDecode(@Param('jwtToken') jwtToken: string) {
         try {
-            return await this.authService.refreshTokenDecode(jwtToken);
+            return await this.authService.decodeToken(jwtToken, 'REFRESH_KEY');
         } catch(err) {
             throw err;
         }
@@ -48,7 +48,7 @@ export class AuthController {
     @UseGuards(AuthGuard('jwt-refresh'))
     async refreshToken(@Body() refreshDto: RefreshDto, @Request() req) {
         try {
-            return req.user.accessToken;
+            return {accessToken : req.user.accessToken};
         } catch(err) {
             throw err;
         }
