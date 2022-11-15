@@ -1,7 +1,6 @@
-import { Injectable, UnauthorizedException, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { object } from 'joi';
 import { Payload, Secret } from 'src/common/interface/token.interface';
 import { UsersRepository } from 'src/models/users/repository/users.repository';
 import { ErrorCustoms } from '../../common/customs/error';
@@ -30,63 +29,6 @@ export class AuthService {
         }
     }
 
-    /*
-    두번째 코드
-    async issuanceToken(payload: Payload, secret) {
-        try {
-            switch(payload.type) {
-                case 'accessToken':
-                    return this.jwtService.sign(payload, 
-                        {
-                            secret: this.configService.get<string>(secret.key), 
-                            expiresIn: this.configService.get<string>(`${secret.expiresin}`)
-                        }
-                    );
-                case 'refreshToken':
-                    return this.jwtService.sign(payload, 
-                        {
-                            secret: this.configService.get<string>(secret.key), 
-                            expiresIn: this.configService.get<string>(`${secret.expiresin}`)
-                        }
-                    );
-                default:
-                    throw new BadRequestException(1004);
-            }
-        } catch (err) {
-            throw err;
-        }
-    }*/
-    
-
-
-    /*
-    첫번째 코드
-    async accessToken(payload: object, secret) {
-        try {
-            return this.jwtService.sign(payload, 
-                    {
-                        secret: this.configService.get<string>(secret.key), 
-                        expiresIn: this.configService.get<string>(`${secret.expiresin}`)
-                    }
-                )
-        } catch(err) {
-            throw err;
-        }
-    }
-
-    async refreshToken(payload: object, secret) {
-        try {
-            return this.jwtService.sign(payload, 
-                    {
-                        secret: this.configService.get<string>(secret.key), 
-                        expiresIn: this.configService.get<string>(`${secret.expiresin}`)
-                    }
-                );
-        } catch (err) {
-            throw err;
-        }
-    }*/
-
     async decodeToken(token: string, secret: string) {
         try {
             return await this.jwtService.verify(token, {
@@ -96,27 +38,6 @@ export class AuthService {
             this.errorCustoms.tokenError(err);
         }   
     }
-
-    /*
-    async accessTokenDecode(accessToken: string) {
-        try {
-            return await this.jwtService.verify(accessToken, {
-                secret: this.configService.get<string>('ACCESS_KEY')
-            });
-        } catch (err) {
-            this.errorCustoms.tokenError(err);
-        }   
-    }
-
-    async refreshTokenDecode(refreshToken: string) {
-        try {
-            return await this.jwtService.verify(refreshToken, {
-                secret: this.configService.get<string>('REFRESH_KEY')
-            });
-        } catch (err) {
-            this.errorCustoms.tokenError(err);
-        }   
-    }*/
 
     async refreshTokenConfirm(resRefreshToken:string, userId: string) {
         try {

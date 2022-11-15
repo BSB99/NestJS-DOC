@@ -7,7 +7,8 @@ export class User extends BaseEntity{
 
     @Column({
         type: 'varchar',
-        length: 255
+        length: 255,
+        unique: true
     })
     id: string;
 
@@ -22,7 +23,13 @@ export class User extends BaseEntity{
         type: 'varchar',
         length: 255
     })
-    password: string;
+    salt: string;
+
+    @Column({
+        type: 'varchar',
+        length: 30
+    })
+    name: string;
 
     @Column({
         nullable: true
