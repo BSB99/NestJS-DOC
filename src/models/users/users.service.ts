@@ -9,15 +9,15 @@ export class UsersService {
         private readonly authService: AuthService,
     ){}
 
-    async signIn({id, password}) {
+    async signIn({email, password}) {
         try {
-            const userInfo = await this.usersRepository.signIn(id);
+            const userInfo = await this.usersRepository.signIn(email);
             
             if (userInfo === null) {
                 throw new NotFoundException(1000);
             }
 
-            const {email, salt} = userInfo;
+            const {salt} = userInfo;
 
             const passwordConfirm = await bcrypt.compare(password, salt);
             
@@ -25,7 +25,7 @@ export class UsersService {
                 throw new UnauthorizedException(1003);
             }
             
-            const accessToken = await this.authService.issuanceToken({email, id},
+            const accessToken = await this.authService.issuanceToken({email},
                 {
                     key: 'ACCESS_KEY', 
                     expiresin: 'ACCESS_KEY_EXPIRESIN'
@@ -38,7 +38,7 @@ export class UsersService {
                 }
             );
             
-            await this.usersRepository.refreshToken(id, refreshToken);
+            await this.usersRepository.refreshToken(email, refreshToken);
 
             return {accessToken, refreshToken};
         } catch (err) {
@@ -50,11 +50,6 @@ export class UsersService {
         try {
             const emailConfirm = await this.usersRepository.emailConfirm(signUpDto.email);
             if (emailConfirm) {
-                throw new BadRequestException(1001);
-            }
-
-            const idConfirm = await this.usersRepository.idConfirm(signUpDto.id);
-            if (idConfirm) {
                 throw new BadRequestException(1001);
             }
 

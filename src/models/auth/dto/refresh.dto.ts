@@ -1,12 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEmail } from "class-validator";
 
 export class RefreshDto {
     @ApiProperty({
-        example: 'test',
-        description: 'id를 입력 해 주세요'
+        example: 'test@naver.com',
+        description: 'email를 입력해 주세요'
     })
-    @IsString({message: '문자만 입력 해 주세요.'})
-    @IsNotEmpty({message: 'id를 입력 해 주세요'})
-    id: string;
+    @IsEmail({message: 'email 형식에 맞게 입력해 주세요.'})
+    email: string;
 }

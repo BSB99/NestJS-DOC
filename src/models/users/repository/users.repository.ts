@@ -10,11 +10,11 @@ export class UsersRepository{
         private usersRepository: Repository<User>,
     ){}
 
-    async signIn(id: string) {
+    async signIn(email: string) {
         try {
             const user = await this.usersRepository.createQueryBuilder('users')
-            .select(['users.id','users.email', 'users.salt', 'users.refreshToken'])
-            .where('users.id = :id', {id})
+            .select(['users.email', 'users.salt', 'users.refreshToken'])
+            .where('users.email = :email', {email})
             .getOne();
         
             return user;
@@ -25,7 +25,7 @@ export class UsersRepository{
 
     async signUp(signUpDto) {
         try {
-            const {email, id, password, name} = signUpDto;
+            const {email, password, name} = signUpDto;
 
             const {raw} = await this.usersRepository.createQueryBuilder('users')
             .insert()
@@ -33,7 +33,6 @@ export class UsersRepository{
             .values([
                 {
                     email, 
-                    id, 
                     salt: password, 
                     name
                 }
@@ -46,12 +45,12 @@ export class UsersRepository{
         }
     }
 
-    async refreshToken(id: string, refreshToken: string) {
+    async refreshToken(email: string, refreshToken: string) {
         try {
             return await this.usersRepository.createQueryBuilder()
             .update(User)
             .set({refreshToken})
-            .where('users.id = :id',{id})
+            .where('users.email = :email',{email})
             .execute();
 
         } catch (err) {
@@ -64,18 +63,6 @@ export class UsersRepository{
             return await this.usersRepository.createQueryBuilder('users')
             .select(['users.no'])
             .where('users.email = :email', {email})
-            .getOne();
-
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async idConfirm(id: string) {
-        try {
-            return await this.usersRepository.createQueryBuilder('users')
-            .select(['users.no'])
-            .where('users.id = :id', {id})
             .getOne();
 
         } catch (err) {

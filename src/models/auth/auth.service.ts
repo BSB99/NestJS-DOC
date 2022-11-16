@@ -39,9 +39,9 @@ export class AuthService {
         }   
     }
 
-    async refreshTokenConfirm(resRefreshToken:string, userId: string) {
+    async refreshTokenConfirm(resRefreshToken:string, email: string) {
         try {
-            const userInfo = await this.usersRepository.signIn(userId);
+            const userInfo = await this.usersRepository.signIn(email);
             
             if (userInfo === null) {
                 throw new NotFoundException(1000);
@@ -54,11 +54,10 @@ export class AuthService {
             const accessToken = await this.issuanceToken(
                 {
                     email : certificateRefreshToken.email, 
-                    id: certificateRefreshToken.id,
                 },
                 {key: 'ACCESS_KEY', expiresin:'ACCESS_KEY_EXPIRESIN'}
             );
-
+            
             return {accessToken};
         };
 
