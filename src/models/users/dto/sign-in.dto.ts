@@ -1,3 +1,4 @@
-import { SignDto } from "./sign.dto";
+import { PickType } from "@nestjs/swagger";
+import { SignUpDto } from "./sign-up.dto";
 
-export class SignInDto extends SignDto {}
+export class SignInDto extends PickType(SignUpDto, ['email','password']) {}
