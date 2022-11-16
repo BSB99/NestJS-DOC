@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -16,9 +16,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   // 함수명은 꼭 validate를 써주어야 한다. 다른 함수명은 오류!
-  async validate(payload: any) {
+  async validate({no,email}) {
     try {
-      return { email: payload.email };
+      return { no, email };
     } catch (err) {
       throw err;
     }

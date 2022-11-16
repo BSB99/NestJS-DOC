@@ -13,7 +13,7 @@ export class UsersRepository{
     async signIn(email: string) {
         try {
             const user = await this.usersRepository.createQueryBuilder('users')
-            .select(['users.email', 'users.salt', 'users.refreshToken'])
+            .select(['users.no','users.email', 'users.salt', 'users.refreshToken'])
             .where('users.email = :email', {email})
             .getOne();
         
@@ -52,7 +52,7 @@ export class UsersRepository{
             .set({refreshToken})
             .where('users.email = :email',{email})
             .execute();
-
+                        
         } catch (err) {
             throw err;
         }
@@ -63,6 +63,18 @@ export class UsersRepository{
             return await this.usersRepository.createQueryBuilder('users')
             .select(['users.no'])
             .where('users.email = :email', {email})
+            .getOne();
+
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async userInfo(no) {
+        try {
+            return await this.usersRepository.createQueryBuilder('users')
+            .select(['users.no', 'users.email', 'users.name'])
+            .where('users.no = :no', {no})
             .getOne();
 
         } catch (err) {

@@ -17,7 +17,7 @@ export class UsersService {
                 throw new NotFoundException(1000);
             }
 
-            const {salt} = userInfo;
+            const {no, salt} = userInfo;
 
             const passwordConfirm = await bcrypt.compare(password, salt);
             
@@ -25,13 +25,13 @@ export class UsersService {
                 throw new UnauthorizedException(1003);
             }
             
-            const accessToken = await this.authService.issuanceToken({email},
+            const accessToken = await this.authService.issuanceToken({no, email},
                 {
                     key: 'ACCESS_KEY', 
                     expiresin: 'ACCESS_KEY_EXPIRESIN'
                 }
             );
-            const refreshToken = await this.authService.issuanceToken({email}, 
+            const refreshToken = await this.authService.issuanceToken({no, email}, 
                 {
                     key: 'REFRESH_KEY', 
                     expiresin: 'REFRESH_KEY_EXPIRESIN'
@@ -57,6 +57,16 @@ export class UsersService {
             signUpDto.password = await bcrypt.hash(signUpDto.password, salts);
 
             await this.usersRepository.signUp(signUpDto);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async userInfo(no:number) {
+        try {
+            const userInfo = await this.usersRepository.userInfo(no);
+
+            return userInfo;
         } catch (err) {
             throw err;
         }

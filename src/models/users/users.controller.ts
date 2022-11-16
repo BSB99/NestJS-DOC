@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, Req, Request, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from 'src/common/decorators/current-user.decorators';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { UsersService } from './users.service';
@@ -25,6 +27,18 @@ export class UsersController {
     async signUp(@Body() signUpDto: SignUpDto) {
         try {
             await this.usersService.signUp(signUpDto);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    @ApiBearerAuth('access-token')
+    @ApiOperation({ summary: '유저 정보 API', description: '유저 정보'})
+    @UseGuards(AuthGuard('jwt'))
+    @Get()
+    async userInfo(@CurrentUser() user) {
+        try {
+            return await this.usersService.userInfo(user.no);
         } catch (err) {
             throw err;
         }

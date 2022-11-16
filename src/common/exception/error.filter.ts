@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
 import { HttpArgumentsHost } from "@nestjs/common/interfaces";
-import { Response, Request } from 'express';
+import e, { Response, Request } from 'express';
 import { errorObj } from "src/public/error-code";
 import { ErrorObj } from "../interface/error.interface";
 
@@ -45,7 +45,16 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
                     message: errInfo[0],
                 }   
             });
-        } else if (typeof(errInfo) === "string") {
+        } else if (errInfo === "Unauthorized") {
+            return response.status(status).json({
+                success: false,
+                statusCode: status,
+                error: {
+                    code: 1003,
+                    message: errorObj[1003],
+                }   
+            });
+        } else if (typeof(errInfo) === "string") {           
             return response.status(status).json({
                 success: false,
                 statusCode: status,
