@@ -26,59 +26,70 @@ export class User extends BaseEntity{
 
     @Column({
         type: 'varchar',
-        length: 255
+        length: 255,
+        nullable: true
     })
     image: string;
 
     @Column({
-        type: 'date'
+        type: 'date',
+        nullable: true
     })
     date_birth: Date;
 
     @Column({
         type: 'varchar',
-        length: 20
+        length: 20,
+        nullable: true
     })
     phone_number: string;
 
     @Column({
         type: 'mediumtext',
+        nullable: true,
     })
     introduce: string;
 
     @Column({
-        type: 'int'
+        type: 'int',
+        nullable: true
     })
     language: number;
 
     @Column({
-        type: 'tinyint'
+        type: 'tinyint',
+        nullable: true,
     })
     service_agreement: boolean;
 
     @Column({
-        type: 'tinyint'
+        type: 'tinyint',
+        nullable: true
     })
     privacy_terms: boolean;
 
     @Column({
-        type: 'tinyint'
+        type: 'tinyint',
+        nullable: true
     })
     cookie_policy: boolean;
 
     @Column({
-        type: 'tinyint'
+        type: 'tinyint',
+        nullable: true
     })
     marketing_terms: boolean;
     
     @Column({
-        type: 'tinyint'
+        type: 'tinyint',
+        default: false
     })
     active: boolean;
 
     @Column({
         type: 'varchar',
-        length: 50
+        length: 50,
+        nullable: true
     })
     otp_secret: string;
 

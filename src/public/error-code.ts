@@ -3,6 +3,7 @@ export const errorObj = {
     1001: "Bad Request",
     1003: "Unauthorized",
     1004: "Token Error",
+    1005: "Email Authentication",
     1010: "Gone",
     1030: "다시 로그인 해주세요",
     1055: "invalid parameter",

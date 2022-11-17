@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Student } from './models/students/entity/Students.entity';
 import { User } from './models/users/entity/users.entity';
 import { School } from './models/schools/entity/Schools.entity';
+import { EmailModule } from './models/email/email.module';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
@@ -49,6 +50,7 @@ import { School } from './models/schools/entity/Schools.entity';
   SchoolsModule,
   UsersModule,
   AuthModule,
+  EmailModule,
 ],
   controllers: [AppController],
   //Service는 공급자 이므로 파일을 생성한 경우 꼭 providers 안에 넣어줘야 종속성 문제가 발생하지 않는다.

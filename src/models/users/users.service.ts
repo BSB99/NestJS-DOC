@@ -17,12 +17,16 @@ export class UsersService {
                 throw new NotFoundException(1000);
             }
 
-            const {no, salt} = userInfo;
+            const {no, salt, active} = userInfo;
 
             const passwordConfirm = await bcrypt.compare(password, salt);
             
             if (!passwordConfirm) {
                 throw new UnauthorizedException(1003);
+            }
+
+            if (!active) {
+                throw new UnauthorizedException(1005);
             }
             
             const accessToken = await this.authService.issuanceToken({no, email},
@@ -67,6 +71,14 @@ export class UsersService {
             const userInfo = await this.usersRepository.userInfo(no);
 
             return userInfo;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async emailVerification(email:string) {
+        try {
+            await this.usersRepository.emailVerification(email);
         } catch (err) {
             throw err;
         }
