@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodeMailer from 'nodemailer';
 import * as uuid from 'uuid';
@@ -13,12 +13,12 @@ export class EmailService {
         private readonly authService: AuthService,
     ){}
 
-    async emailAuth({email}) {
-        try {
+    async emailAuth(email) {
+        try {            
             const emailConfirm = await this.usersRepository.emailConfirm(email);
             
             if (!emailConfirm) {
-                throw new BadRequestException(1001);
+                throw new NotFoundException(1000);
             }
 
             const currentDate = new Date();

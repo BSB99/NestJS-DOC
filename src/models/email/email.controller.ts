@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
-import { AuthEmailDto } from './dto/auth-email.dto';
+import { Controller, Get, Param } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { EmailService } from './email.service';
 
+@ApiTags('email')
 @Controller('email')
 export class EmailController {
     constructor(
@@ -10,10 +10,10 @@ export class EmailController {
     ){}
 
     @ApiOperation({ summary: '이메일 인증 URL 전송 API', description: '이메일 인증 URL 전송'})
-    @Get('auth')
-    async emailAuth(@Body() authEmailDto: AuthEmailDto) {
+    @Get('auth/:email')
+    async emailAuth(@Param('email') email: string) {
         try {
-            return await this.emailService.emailAuth(authEmailDto);
+            return await this.emailService.emailAuth(email);
         } catch (err) {
             throw err;
         }
