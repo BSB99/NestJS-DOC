@@ -22,9 +22,10 @@ export class EmailService {
             }
 
             const currentDate = new Date();
-
             // 이메일 발송시간 제한
             if (emailConfirm.emailAt) {
+                console.log(emailConfirm.emailAt);
+
                 const emailAt = new Date(emailConfirm.emailAt);
                 emailAt.setMinutes(emailAt.getMinutes() + 1)
 

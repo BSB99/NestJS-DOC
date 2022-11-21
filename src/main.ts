@@ -9,7 +9,7 @@ import { BaseApiDocument } from './common/swagger/swagger.document';
 async function bootstrap() {
   // NestFactory - 인스턴스를 생성할 수 있는 몇 가지 정적 메서드 노출
   const app = await NestFactory.create(AppModule);
-  
+  app.enableCors();
   const config = new BaseApiDocument().initializeOptions();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
