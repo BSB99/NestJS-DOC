@@ -39,7 +39,7 @@ export class User extends BaseEntity{
 
     @Column({
         type: 'varchar',
-        length: 20,
+        length: 30,
         nullable: true
     })
     phone_number: string;
@@ -104,9 +104,20 @@ export class User extends BaseEntity{
     })                                                                                                                                                                                                                                                  
     deletedAt: Date|null
 
+    @Column({
+        type: 'datetime',
+        nullable: true
+    })
+    emailAt: Date|null;
+
     // 지울예정
     @Column({
         nullable: true
     })
     refreshToken: string;
+
+    @Column({
+        nullable: true
+    })
+    uuid: string;
 }

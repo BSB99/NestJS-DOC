@@ -76,9 +76,14 @@ export class UsersService {
         }
     }
 
-    async emailVerification(email:string) {
+    async emailVerification(uuid:string) {
         try {
-            await this.usersRepository.emailVerification(email);
+            const {active} = await this.usersRepository.activeConfirm(uuid)
+            if (active) {
+                throw new BadRequestException(1007);
+            }
+            
+            await this.usersRepository.emailVerification(uuid);
         } catch (err) {
             throw err;
         }

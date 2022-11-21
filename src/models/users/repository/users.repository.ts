@@ -59,11 +59,11 @@ export class UsersRepository{
     }
 
     async emailConfirm(email: string) {
-        try {
+        try {            
             return await this.usersRepository.createQueryBuilder('users')
-            .select(['users.no'])
+            .select(['users.no AS no', `CONVERT_TZ(users.emailAt, '+00:00', '+09:00') AS emailAt`])
             .where('users.email = :email', {email})
-            .getOne();
+            .getRawOne();
 
         } catch (err) {
             throw err;
@@ -82,14 +82,63 @@ export class UsersRepository{
         }
     }
 
-    async emailVerification(email) {
+    async emailVerification(uuid) {
         try {
             return await this.usersRepository.createQueryBuilder()
             .update(User)
             .set({active: true})
-            .where('users.email = :email',{email})
+            .where('users.uuid = :uuid',{uuid})
             .execute();
             
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async uuidSet(email: string, secret: string) {
+        try {
+            return await this.usersRepository.createQueryBuilder()
+            .update(User)
+            .set({uuid: secret})
+            .where('users.email = :email',{email})
+            .execute();
+
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async uuidConfirm(uuid) {
+        try {
+            return await this.usersRepository.createQueryBuilder('users')
+            .select(['users.no'])
+            .where('users.uuid = :uuid', {uuid})
+            .getOne();
+
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async authEmailAt(date, email) {
+        try {
+            return await this.usersRepository.createQueryBuilder()
+            .update(User)
+            .set({emailAt: date})
+            .where('users.email = :email', {email})
+            .execute()
+
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async activeConfirm(uuid) {
+        try {
+            return await this.usersRepository.createQueryBuilder('users')
+            .select(['users.active'])
+            .where('users.uuid = uuid', {uuid})
+            .getOne();
         } catch (err) {
             throw err;
         }

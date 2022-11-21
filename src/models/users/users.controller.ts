@@ -41,14 +41,14 @@ export class UsersController {
             return await this.usersService.userInfo(user.no);
         } catch (err) {
             throw err;
-        }
+        }   
     }
 
     @ApiOperation({ summary: '이메일 인증 확인 API', description: '이메일 인증 확인'})
-    @Get('verification/:email')
-    async emailVerification(@Param('email') email:string) {
+    @Get('verification/:uuid')
+    async emailVerification(@Param('uuid') uuid:string) {
         try {
-            return await this.usersService.emailVerification(email);
+            return await this.usersService.emailVerification(uuid);
         } catch (err) {
             throw err;
         }
