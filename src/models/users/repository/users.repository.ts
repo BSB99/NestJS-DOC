@@ -61,7 +61,7 @@ export class UsersRepository{
     async emailConfirm(email: string) {
         try {            
             return await this.usersRepository.createQueryBuilder('users')
-            .select(['users.no AS no', `CONVERT_TZ(users.emailAt, '+00:00', '+09:00') AS emailAt`])
+            .select(['users.no AS no', `CONVERT_TZ(users.emailAt, '+00:00', '-05:00') AS emailAt`])
             .where('users.email = :email', {email})
             .getRawOne();
 

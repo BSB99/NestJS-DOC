@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodeMailer from 'nodemailer';
 import * as uuid from 'uuid';
@@ -14,18 +14,16 @@ export class EmailService {
     ){}
 
     async emailAuth(email) {
-        try {            
+        try {
             const emailConfirm = await this.usersRepository.emailConfirm(email);
             
             if (!emailConfirm) {
-                throw new NotFoundException(1000);
+                throw new BadRequestException(1001);
             }
-
             const currentDate = new Date();
+
             // 이메일 발송시간 제한
             if (emailConfirm.emailAt) {
-                console.log(emailConfirm.emailAt);
-
                 const emailAt = new Date(emailConfirm.emailAt);
                 emailAt.setMinutes(emailAt.getMinutes() + 1)
 
@@ -33,7 +31,6 @@ export class EmailService {
                     throw new BadRequestException(1006);
                 };
             }
-            
 
             await this.usersRepository.authEmailAt(currentDate, email);
 
