@@ -22,13 +22,17 @@ export class EmailService {
             }
 
             const currentDate = new Date();
-            const emailAt = new Date(emailConfirm.emailAt);
+
             // 이메일 발송시간 제한
-            emailAt.setMinutes(emailAt.getMinutes() + 1)
+            if (emailConfirm.emailAt) {
+                const emailAt = new Date(emailConfirm.emailAt);
+                emailAt.setMinutes(emailAt.getMinutes() + 1)
+
+                if (currentDate <= emailAt) {
+                    throw new BadRequestException(1006);
+                };
+            }
             
-            if (currentDate <= emailAt) {
-                throw new BadRequestException(1006);
-            };
 
             await this.usersRepository.authEmailAt(currentDate, email);
 
