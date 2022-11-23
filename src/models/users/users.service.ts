@@ -2,11 +2,13 @@ import { BadRequestException, Injectable, NotFoundException, UnauthorizedExcepti
 import { AuthService } from 'src/models/auth/auth.service';
 import { UsersRepository } from './repository/users.repository';
 import * as bcrypt from 'bcrypt';
+import { EmailRepository } from '../email/Repository/email.repository';
 @Injectable()
 export class UsersService {
     constructor(
         private readonly usersRepository: UsersRepository,
         private readonly authService: AuthService,
+        private readonly emailRepository: EmailRepository
     ){}
 
     async signIn({email, password}) {
@@ -52,7 +54,7 @@ export class UsersService {
 
     async signUp(signUpDto) {
         try {
-            const emailConfirm = await this.usersRepository.emailConfirm(signUpDto.email);
+            const emailConfirm = await this.emailRepository.emailConfirm(signUpDto.email);
             if (emailConfirm) {
                 throw new BadRequestException(1001);
             }
@@ -60,7 +62,10 @@ export class UsersService {
             const salts = await bcrypt.genSalt();
             signUpDto.password = await bcrypt.hash(signUpDto.password, salts);
 
-            await this.usersRepository.signUp(signUpDto);
+            const {insertId} = await this.emailRepository.createAuthEmail();
+            await this.usersRepository.signUp(signUpDto, insertId);
+
+            
         } catch (err) {
             throw err;
         }
@@ -78,12 +83,8 @@ export class UsersService {
 
     async emailVerification(uuid:string) {
         try {
-            const {active} = await this.usersRepository.activeConfirm(uuid)
-            if (active) {
-                throw new BadRequestException(1007);
-            }
-            
-            await this.usersRepository.emailVerification(uuid);
+            const {no} = await this.emailRepository.uuidVerification(uuid);
+            await this.usersRepository.emailVerification(no)
         } catch (err) {
             throw err;
         }

@@ -2,41 +2,37 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodeMailer from 'nodemailer';
 import * as uuid from 'uuid';
-import { AuthService } from '../auth/auth.service';
-import { UsersRepository } from '../users/repository/users.repository';
+import { EmailRepository } from './Repository/email.repository';
 
 @Injectable()
 export class EmailService {
     constructor(
         private readonly configService: ConfigService,
-        private readonly usersRepository: UsersRepository,
-        private readonly authService: AuthService,
+        private readonly emailRepository: EmailRepository
     ){}
 
     async emailAuth(email) {
         try {
-            const emailConfirm = await this.usersRepository.emailConfirm(email);
+            const emailInfo = await this.emailRepository.emailConfirm(email);
+            const currentDate = new Date();
+            const secret = uuid.v1();
+            const url = this.configService.get<string>('URL');
             
-            if (!emailConfirm) {
+            if (!emailInfo) {
                 throw new BadRequestException(1001);
             }
-            const currentDate = new Date();
 
             // 이메일 발송시간 제한
-            if (emailConfirm.emailAt) {
-                const emailAt = new Date(emailConfirm.emailAt);
-                emailAt.setMinutes(emailAt.getMinutes() + 1)
+            if (emailInfo.emailSendedAt) {
+                const emailAt = new Date(emailInfo.emailSendedAt);
+                emailAt.setMinutes(emailAt.getMinutes() + 1);
 
                 if (currentDate <= emailAt) {
                     throw new BadRequestException(1006);
                 };
             }
 
-            await this.usersRepository.authEmailAt(currentDate, email);
-
-            const secret = uuid.v1();
-            
-            await this.usersRepository.uuidSet(email, secret);
+            await this.emailRepository.setAuthEmail(currentDate, emailInfo.no, secret);
 
             const transporter = nodeMailer.createTransport({
                 service: this.configService.get<string>('EMAIL_SERVICE'),
@@ -45,8 +41,6 @@ export class EmailService {
                     pass: this.configService.get<string>('EMAIL_PASSWORD')
                 }
             })
-
-            const url = this.configService.get<string>('URL');
 
             const mailOptions = {
                 to: email,

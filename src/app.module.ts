@@ -11,6 +11,7 @@ import { Student } from './models/students/entity/Students.entity';
 import { User } from './models/users/entity/users.entity';
 import { School } from './models/schools/entity/Schools.entity';
 import { EmailModule } from './models/email/email.module';
+import { AuthEmail } from './models/email/entity/email.entity';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
@@ -31,7 +32,7 @@ import { EmailModule } from './models/email/email.module';
     username : process.env.TESTDB_1_USERNAME,
     password : process.env.TESTDB_1_PSWORD,
     database : process.env.TESTDB_1_DATABASE,
-    entities: [Student, User],
+    entities: [Student, User, AuthEmail],
     synchronize: Boolean(process.env.TESTDB_1_SYNCHRONIZE)}),
 
   TypeOrmModule.forRoot({

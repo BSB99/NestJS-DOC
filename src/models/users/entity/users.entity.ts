@@ -1,4 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { AuthEmail } from "src/models/email/entity/email.entity";
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('users')
 export class User extends BaseEntity{
@@ -104,20 +105,13 @@ export class User extends BaseEntity{
     })                                                                                                                                                                                                                                                  
     deletedAt: Date|null
 
-    @Column({
-        type: 'datetime',
-        nullable: true
-    })
-    emailAt: Date|null;
-
     // 지울예정
     @Column({
         nullable: true
     })
     refreshToken: string;
 
-    @Column({
-        nullable: true
-    })
-    uuid: string;
+    @OneToOne(() => AuthEmail)
+    @JoinColumn({name: 'auth_email_no'})
+    auth_email: number
 }
