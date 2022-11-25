@@ -15,6 +15,6 @@ import { UsersService } from './users.service';
     TypeOrmModule.forFeature([User,AuthEmail], 'testDB_1')],
     controllers: [UsersController],
     providers: [UsersService, UsersRepository, AuthService, JwtService, ErrorCustoms, EmailRepository],
-    exports: [UsersService,UsersRepository]
+    exports: [UsersService, UsersRepository]
 })
 export class UsersModule {}

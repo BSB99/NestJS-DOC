@@ -23,8 +23,8 @@ export class UsersRepository{
         }
     }
 
-    async signUp(signUpDto, insertId) {
-        try {
+    async signUp(signUpDto) {
+        try {            
             const {email, password, name} = signUpDto;
 
             const {raw} = await this.usersRepository.createQueryBuilder('users')
@@ -35,12 +35,24 @@ export class UsersRepository{
                     email, 
                     salt: password, 
                     name,
-                    auth_email: insertId
                 }
             ])
             .execute();
 
             return raw;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async userConfirm(email: string) {
+        try {            
+            const userInfo = await this.usersRepository.createQueryBuilder('users')
+            .select(['users.no AS no'])
+            .where('users.email = :email', {email})
+            .getRawOne();
+
+            return userInfo;
         } catch (err) {
             throw err;
         }

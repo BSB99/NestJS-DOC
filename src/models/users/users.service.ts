@@ -3,12 +3,13 @@ import { AuthService } from 'src/models/auth/auth.service';
 import { UsersRepository } from './repository/users.repository';
 import * as bcrypt from 'bcrypt';
 import { EmailRepository } from '../email/Repository/email.repository';
+import { InjectDataSource } from '@nestjs/typeorm';
 @Injectable()
 export class UsersService {
     constructor(
         private readonly usersRepository: UsersRepository,
         private readonly authService: AuthService,
-        private readonly emailRepository: EmailRepository
+        private readonly emailRepository: EmailRepository,
     ){}
 
     async signIn({email, password}) {
@@ -54,18 +55,15 @@ export class UsersService {
 
     async signUp(signUpDto) {
         try {
-            const emailConfirm = await this.emailRepository.emailConfirm(signUpDto.email);
-            if (emailConfirm) {
+            const userConfirm = await this.usersRepository.userConfirm(signUpDto.email);
+            if (userConfirm) {
                 throw new BadRequestException(1001);
             }
-
+            
             const salts = await bcrypt.genSalt();
             signUpDto.password = await bcrypt.hash(signUpDto.password, salts);
 
-            const {insertId} = await this.emailRepository.createAuthEmail();
-            await this.usersRepository.signUp(signUpDto, insertId);
-
-            
+            await this.usersRepository.signUp(signUpDto);
         } catch (err) {
             throw err;
         }
@@ -84,7 +82,7 @@ export class UsersService {
     async emailVerification(uuid:string) {
         try {
             const {no} = await this.emailRepository.uuidVerification(uuid);
-            await this.usersRepository.emailVerification(no)
+            await this.usersRepository.emailVerification(no);
         } catch (err) {
             throw err;
         }

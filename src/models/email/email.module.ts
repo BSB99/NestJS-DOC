@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ErrorCustoms } from 'src/common/customs/error';
+import { DataSource } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../users/entity/users.entity';
 import { UsersRepository } from '../users/repository/users.repository';
@@ -13,6 +14,6 @@ import { EmailRepository } from './Repository/email.repository';
 @Module({
     imports: [TypeOrmModule.forFeature([User,AuthEmail], 'testDB_1')],
     controllers: [EmailController],
-    providers: [EmailService, UsersRepository, AuthService, JwtService, ErrorCustoms, EmailRepository],
+    providers: [EmailService, UsersRepository, AuthService, JwtService, ErrorCustoms, EmailRepository]
 })
 export class EmailModule {}

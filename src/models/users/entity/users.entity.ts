@@ -1,8 +1,9 @@
 import { AuthEmail } from "src/models/email/entity/email.entity";
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('users')
 export class User extends BaseEntity{
+    @OneToMany(() => AuthEmail, (authEmail) => authEmail.user_no)
     @PrimaryGeneratedColumn()
     no: number;
 
@@ -110,8 +111,4 @@ export class User extends BaseEntity{
         nullable: true
     })
     refreshToken: string;
-
-    @OneToOne(() => AuthEmail)
-    @JoinColumn({name: 'auth_email_no'})
-    auth_email: number
 }

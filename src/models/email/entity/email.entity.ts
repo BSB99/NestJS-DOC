@@ -1,5 +1,5 @@
 import { User } from "src/models/users/entity/users.entity";
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('auth_email')
 export class AuthEmail extends BaseEntity {
@@ -16,4 +16,8 @@ export class AuthEmail extends BaseEntity {
         nullable: true
     })
     sendedAt: Date|null;
+
+    @ManyToOne(() => User, user => user.no)
+    @JoinColumn({name:'user_no'})
+    user_no: User;
 }
