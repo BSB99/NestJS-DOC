@@ -27,7 +27,7 @@ export class EmailRepository{
             .select(
                 [
                     'email_auth.no AS EmailNo', 
-                    `CONVERT_TZ(email_auth.sendedAt, '+00:00', '+09:00') AS emailSendedAt`
+                    `CONVERT_TZ(email_auth.sendedAt, '+00:00', '-05:00') AS emailSendedAt`
                 ]
             )
             .where('email_auth.user_no = :no', {no})
