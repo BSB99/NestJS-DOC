@@ -12,6 +12,7 @@ import { User } from './models/users/entity/users.entity';
 import { School } from './models/schools/entity/Schools.entity';
 import { EmailModule } from './models/email/email.module';
 import { AuthEmail } from './models/email/entity/email.entity';
+import { DataSource } from 'typeorm';
 
 @Module({
   //Module을 imports 배열안에 넣어주면 해당 Module안에 있는 controller와 providers는 넣어주지 않아도 된다.
@@ -33,8 +34,8 @@ import { AuthEmail } from './models/email/entity/email.entity';
     password : process.env.TESTDB_1_PSWORD,
     database : process.env.TESTDB_1_DATABASE,
     entities: [Student, User, AuthEmail],
-    synchronize: Boolean(process.env.TESTDB_1_SYNCHRONIZE)}),
-
+    synchronize: Boolean(process.env.TESTDB_1_SYNCHRONIZE),
+  }),
   TypeOrmModule.forRoot({
     timezone: "Asia/Seoul",
     name: process.env.TESTDB_2_NAME,  
@@ -45,7 +46,7 @@ import { AuthEmail } from './models/email/entity/email.entity';
     password : process.env.TESTDB_2_PSWORD,
     database : process.env.TESTDB_2_DATABASE,
     entities: [School],
-    synchronize: Boolean(process.env.TESTDB_2_SYNCHRONIZE)
+    synchronize: Boolean(process.env.TESTDB_2_SYNCHRONIZE),
   }),
   StudentsModule,
   SchoolsModule,
@@ -78,7 +79,8 @@ import { AuthEmail } from './models/email/entity/email.entity';
 })
 // @Module에는 미들웨어가 들어가지 못한다. 대신 configure() 메서드를 사용하여 설정
 // 미들웨어를 포함하는 모듈은 NestModule 인터페이스를 구현해야한다.
-export class AppModule {}
+export class AppModule {
+}
 
 //export class AppModule implements NestModule{
  //configure(consumer: MiddlewareConsumer) {

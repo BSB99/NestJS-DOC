@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/models/users/entity/users.entity";
-import { EntityManager, Repository } from "typeorm";
+import { EntityManager, getManager, Repository } from "typeorm";
 import { AuthEmail } from "../entity/email.entity";
 
 @Injectable()
@@ -22,7 +22,7 @@ export class EmailRepository{
       }
 
     async emailInfo(no) {
-        try {            
+        try {
             const emailInfo = await this.emailRepository.createQueryBuilder('email_auth')
             .select(
                 [
@@ -35,23 +35,6 @@ export class EmailRepository{
             .getRawOne();
             
             return emailInfo;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async createAuthEmail(no, currentDate) {
-        try {
-            const {raw} = await this.emailRepository.createQueryBuilder('auth_email')
-            .insert()
-            .into(AuthEmail)
-            .values({
-                user_no: no,
-                sendedAt: currentDate
-            })
-            .execute();
-            
-            return raw;
         } catch (err) {
             throw err;
         }

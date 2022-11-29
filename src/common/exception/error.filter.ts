@@ -23,8 +23,6 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
             },
             message: errorObj[status],
         };
-        console.log(error);
-        
         const errInfo = error.message;
         
         if (typeof(errInfo) === "object") {
