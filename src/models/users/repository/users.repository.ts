@@ -85,12 +85,11 @@ export class UsersRepository{
 
     async emailVerification(no) {
         try {
-            return await this.usersRepository.createQueryBuilder()
+            await this.usersRepository.createQueryBuilder()
             .update(User)
             .set({active : true})
             .where('users.no = :no',{no})
             .execute();
-
         } catch (err) {
             throw err;
         }

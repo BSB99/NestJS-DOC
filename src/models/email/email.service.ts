@@ -35,20 +35,20 @@ export class EmailService {
                 throw new NotFoundException(1000);
             }
             
-            await queryRunner.manager.save(AuthEmail,{user_no: userInfo.no, sendedAt: currentDate});
-
+            const {no} = await queryRunner.manager.save(AuthEmail,{user_no: userInfo.no, sendedAt: currentDate});
             const emailInfo = await this.emailRepository.emailInfo(userInfo.no);
-
-            // 이메일 발송시간 제한
-            const emailSendedAt = new Date(emailInfo.emailSendedAt);
-            emailSendedAt.setMinutes(emailSendedAt.getMinutes() + 1);
             
-            if (currentDate <= emailSendedAt) {
-                throw new BadRequestException(1006);
-            };
-
-            await this.emailRepository.setAuthEmail(emailInfo.no, secret);
-
+            // 이메일 발송시간 제한
+            if (emailInfo !== undefined) {
+                const emailSendedAt = new Date(emailInfo.emailSendedAt)
+                emailSendedAt.setMinutes(emailSendedAt.getMinutes() + 1);
+                if (currentDate <= emailSendedAt) {
+                    throw new BadRequestException(1006);
+                };
+            }
+            
+            await queryRunner.manager.update(AuthEmail, no, {uuid:secret});
+            
             const transporter = nodeMailer.createTransport({
                 service: this.configService.get<string>('EMAIL_SERVICE'),
                 auth: {

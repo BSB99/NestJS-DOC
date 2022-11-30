@@ -23,15 +23,15 @@ export class EmailRepository{
 
     async emailInfo(no) {
         try {
-            const emailInfo = await this.emailRepository.createQueryBuilder('email_auth')
+            const emailInfo = await this.emailRepository.createQueryBuilder('auth_email')
             .select(
                 [
-                    'email_auth.no AS EmailNo', 
-                    `CONVERT_TZ(email_auth.sendedAt, '+00:00', '-05:00') AS emailSendedAt`
+                    'auth_email.no AS EmailNo', 
+                    `CONVERT_TZ(auth_email.sendedAt, '+00:00', '-05:00') AS emailSendedAt`
                 ]
             )
-            .where('email_auth.user_no = :no', {no})
-            .orderBy('email_auth.sendedAt', 'DESC')
+            .where('auth_email.user_no = :no', {no})
+            .orderBy('auth_email.sendedAt', 'DESC')
             .getRawOne();
             
             return emailInfo;
@@ -43,10 +43,10 @@ export class EmailRepository{
     async uuidVerification(uuid) {
         try {
             return await this.emailRepository.createQueryBuilder('auth_email')
-            .select(['auth_email.no'])
+            .leftJoin('auth_email.user_no','user')
+            .select(['user.no AS userNo'])
             .where('auth_email.uuid = :uuid',{uuid})
-            .getOne();
-            
+            .getRawOne();
         } catch (err) {
             throw err;
         }

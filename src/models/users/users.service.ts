@@ -81,8 +81,9 @@ export class UsersService {
 
     async emailVerification(uuid:string) {
         try {
-            const {no} = await this.emailRepository.uuidVerification(uuid);
-            await this.usersRepository.emailVerification(no);
+            const {userNo} = await this.emailRepository.uuidVerification(uuid);
+            
+            await this.usersRepository.emailVerification(userNo);
         } catch (err) {
             throw err;
         }
