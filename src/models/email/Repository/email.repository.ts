@@ -13,13 +13,6 @@ export class EmailRepository{
         @InjectRepository(AuthEmail, 'testDB_1')
         private emailRepository: Repository<AuthEmail>,
     ){}
-    
-    async runTransaction(tx: (entityManager: EntityManager) => Promise<unknown>): Promise<{}> {
-        return new Promise(async (resolve) => {
-          await this.emailRepository.manager.transaction(tx);
-          resolve({});
-        });
-      }
 
     async emailInfo(no) {
         try {

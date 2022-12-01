@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { getDataSourceName, InjectDataSource } from '@nestjs/typeorm';
-import Connection from 'mysql2/typings/mysql/lib/Connection';
+import { InjectDataSource } from '@nestjs/typeorm';
 import * as nodeMailer from 'nodemailer';
 import { DataSource } from 'typeorm';
 import * as uuid from 'uuid';
@@ -35,12 +34,13 @@ export class EmailService {
                 throw new NotFoundException(1000);
             }
             
+            // 이메일 전송내역 저장
             const {no} = await queryRunner.manager.save(AuthEmail,{user_no: userInfo.no, sendedAt: currentDate});
-            const emailInfo = await this.emailRepository.emailInfo(userInfo.no);
+            const sendEmailInfo = await this.emailRepository.emailInfo(userInfo.no);
             
-            // 이메일 발송시간 제한
-            if (emailInfo !== undefined) {
-                const emailSendedAt = new Date(emailInfo.emailSendedAt)
+            // 이메일 발송시간 제한 (처음 인증메일을 보낼때 제한시간 상관 X)
+            if (sendEmailInfo !== undefined) {
+                const emailSendedAt = new Date(sendEmailInfo.emailSendedAt);
                 emailSendedAt.setMinutes(emailSendedAt.getMinutes() + 1);
                 if (currentDate <= emailSendedAt) {
                     throw new BadRequestException(1006);
