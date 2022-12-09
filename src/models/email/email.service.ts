@@ -5,7 +5,6 @@ import * as nodeMailer from 'nodemailer';
 import { DataSource } from 'typeorm';
 import * as uuid from 'uuid';
 import { UsersRepository } from '../users/repository/users.repository';
-import { AuthEmail } from './entity/email.entity';
 import { EmailRepository } from './Repository/email.repository';
 
 @Injectable()
@@ -62,7 +61,7 @@ export class EmailService {
                 `,
             }
             await transporter.sendMail(mailOptions);
-            
+
             await this.emailRepository.createSendEmail(userInfo.no, secret, currentDate);
         } catch (err) {
             throw err;
