@@ -20,7 +20,7 @@ export class EmailRepository{
             .select(
                 [
                     'auth_email.no AS EmailNo', 
-                    `CONVERT_TZ(auth_email.sendedAt, '+00:00', '-05:00') AS emailSendedAt`
+                    `CONVERT_TZ(auth_email.sendedAt, '+00:00', '+09:00') AS emailSendedAt`
                 ]
             )
             .where('auth_email.user_no = :no', {no})
@@ -31,6 +31,19 @@ export class EmailRepository{
         } catch (err) {
             throw err;
         }
+    }
+
+    async createSendEmail(user_no, sendedAt) {        
+        const result = await this.emailRepository.createQueryBuilder('auth_email')
+        .insert()
+        .into(AuthEmail)
+        .values({
+            sendedAt,
+            user_no
+        })
+        .execute();
+        
+        return result.raw;
     }
 
     async uuidVerification(uuid) {
@@ -57,13 +70,13 @@ export class EmailRepository{
         }
     }
 
-    async setAuthEmail(no, secret) {
+    async updateSendEmail(no, uuid) {
         try {
             return await this.emailRepository.createQueryBuilder()
             .update(AuthEmail)
             .set(
                 {
-                    uuid: secret
+                    uuid
                 }
             )
             .where('auth_email.no = :no', {no})

@@ -20,10 +20,6 @@ export class EmailService {
     ){}
 
     async emailAuth(email) {
-        const queryRunner = this.dataSource.createQueryRunner();
-        
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
         try {
             const currentDate = new Date();
             const secret = uuid.v1();
@@ -33,9 +29,8 @@ export class EmailService {
             if (!userInfo) {
                 throw new NotFoundException(1000);
             }
-            
-            // 이메일 전송내역 저장
-            const {no} = await queryRunner.manager.save(AuthEmail,{user_no: userInfo.no, sendedAt: currentDate});
+        
+            // 마지막 이메일 전송내역 가져오기
             const sendEmailInfo = await this.emailRepository.emailInfo(userInfo.no);
             
             // 이메일 발송시간 제한 (처음 인증메일을 보낼때 제한시간 상관 X)
@@ -47,7 +42,6 @@ export class EmailService {
                 };
             }
             
-            await queryRunner.manager.update(AuthEmail, no, {uuid:secret});
             
             const transporter = nodeMailer.createTransport({
                 service: this.configService.get<string>('EMAIL_SERVICE'),
@@ -67,14 +61,13 @@ export class EmailService {
                 </form>  
                 `,
             }
-
-            await queryRunner.commitTransaction();
             await transporter.sendMail(mailOptions);
+
+            const {insertId} = await this.emailRepository.createSendEmail(userInfo.no, currentDate);
+
+            await this.emailRepository.updateSendEmail(insertId,secret);
         } catch (err) {
-            await queryRunner.rollbackTransaction();
             throw err;
-        } finally {
-            await queryRunner.release();
-        }
+        } 
     }
 }
