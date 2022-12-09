@@ -33,11 +33,12 @@ export class EmailRepository{
         }
     }
 
-    async createSendEmail(user_no, sendedAt) {        
+    async createSendEmail(user_no, uuid, sendedAt) {        
         const result = await this.emailRepository.createQueryBuilder('auth_email')
         .insert()
         .into(AuthEmail)
         .values({
+            uuid,
             sendedAt,
             user_no
         })
@@ -64,23 +65,6 @@ export class EmailRepository{
             .select(['auth_email.no'])
             .where('auth_email.uuid = uuid', {uuid})
             .getOne();
-
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async updateSendEmail(no, uuid) {
-        try {
-            return await this.emailRepository.createQueryBuilder()
-            .update(AuthEmail)
-            .set(
-                {
-                    uuid
-                }
-            )
-            .where('auth_email.no = :no', {no})
-            .execute();
 
         } catch (err) {
             throw err;

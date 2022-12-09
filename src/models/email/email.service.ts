@@ -62,10 +62,8 @@ export class EmailService {
                 `,
             }
             await transporter.sendMail(mailOptions);
-
-            const {insertId} = await this.emailRepository.createSendEmail(userInfo.no, currentDate);
-
-            await this.emailRepository.updateSendEmail(insertId,secret);
+            
+            await this.emailRepository.createSendEmail(userInfo.no, secret, currentDate);
         } catch (err) {
             throw err;
         } 
